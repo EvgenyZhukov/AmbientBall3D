@@ -56,6 +56,7 @@ public class MainScript : MonoBehaviour
     public TMP_Text accelerometerTextOffOn;
     public TMP_Text controlTypeText;
     public TMP_Text starsNumber;
+    public TMP_Text nextLevelsButtonToEpisode2;
     public Material mainText;
     private Color turquoise = new Color(0, 241, 255, 255);
     private float glowPower;
@@ -93,7 +94,8 @@ public class MainScript : MonoBehaviour
     public int currentLvl;
     public bool levelSelected = false;
     public int starsTotal;
-
+    public GameObject needMoreStarsToEpisode2;
+    public GameObject nextToEpisode2;
 
     void Start()
     {
@@ -379,6 +381,20 @@ public class MainScript : MonoBehaviour
         inProgress = SaveLoadData.GetInProgress();
         inProgressTemp = SaveLoadData.GetInProgressTemp();
         currentLvl = SaveLoadData.GetLevelProgress();
+
+        if (starsTotal >= 10 && SaveLoadData.GetLevelProgress() >= 9)
+        {
+            nextLevelsButtonToEpisode2.color = turquoise;
+            needMoreStarsToEpisode2.SetActive(false);
+            nextToEpisode2.SetActive(true);
+        }
+        else
+        {
+            nextLevelsButtonToEpisode2.color = Color.red;
+            needMoreStarsToEpisode2.SetActive(true);
+            nextToEpisode2.SetActive(false);
+        }
+
         if (currentLvl == 0)
         {
             currentLvl = 1;
