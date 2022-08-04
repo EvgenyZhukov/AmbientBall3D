@@ -8,7 +8,7 @@ public class GravityElevator : MonoBehaviour
     public ButtonColumn button;
     [SerializeField] private bool activated = false;
 
-    void FixedUpdate()
+    void Update()
     {
         if (button.activated)
         {

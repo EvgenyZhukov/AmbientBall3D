@@ -10,6 +10,7 @@ public class TeleportPlayer : MonoBehaviour
     public bool teleported = false;     // Проверяет, было ли недавно телепортирование, что бы не попасть в замкнутый цикл
     public TeleportPlayer target;       // Соединяет телепорты
     public GameObject explode;
+    public GameObject activator;
     public ButtonColumn button;
     [SerializeField] private bool activated = false;
 
@@ -45,15 +46,15 @@ public class TeleportPlayer : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    void Update()
     {
         if (button.activated)
         {
-            activated = true;
+            activator.SetActive(true);
         }
-        if (activated)
+        if (activator.activeSelf)
         {
-            explode.SetActive(true);
+            activated = true;
         }
     }
 }

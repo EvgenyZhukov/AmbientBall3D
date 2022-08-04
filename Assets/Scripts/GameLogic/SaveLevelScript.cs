@@ -5,17 +5,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class SaveLevelScript : MonoBehaviour
 {
     public LevelData levelData;
-    public string identifier = "ambientBallSavedLevelData";
+    public string identifier;
     public bool saving = false;
     public bool loading = false;
     public int numbersLevelObj = 0;
 
     void Awake()
     {
+        identifier = "ambientBallSavedLevelData_" + SceneManager.GetActiveScene().buildIndex;
+
         if (!SaveLoadData.GetFirstLevelLaunch())
         {
             loading = true;
