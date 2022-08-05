@@ -236,6 +236,7 @@ public class ScriptUI : MonoBehaviour
         SaveLoadData.ResetCoordinates();
         SaveLoadData.ResetTextProgress();
         SaveLoadData.DelCamAxisTemp();
+        SaveLoadData.SetCheckpoitTextSaving(true);
         RestartLevel();
     }
     /// <summary>
@@ -357,6 +358,15 @@ public class ScriptUI : MonoBehaviour
             rectTransformButtonB.anchorMax = new Vector2(0, 1);
 
             rectTransformButtonB.anchoredPosition3D = new Vector3(posXbuttonA, rectTransformButtonB.anchoredPosition3D.y, rectTransformButtonB.anchoredPosition3D.z);
+        }
+
+        if (SaveLoadData.GetCheckpoitTextSaving())
+        {
+            gameSaved.text = "game saved...";
+        }
+        else
+        {
+            gameSaved.text = "game loaded...";
         }
     }
     /// <summary>

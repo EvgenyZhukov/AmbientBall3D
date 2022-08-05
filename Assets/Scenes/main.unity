@@ -1824,8 +1824,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 140
-  m_fontSizeBase: 140
+  m_fontSize: 120
+  m_fontSizeBase: 120
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -30636,8 +30636,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 140
-  m_fontSizeBase: 140
+  m_fontSize: 120
+  m_fontSizeBase: 120
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -42408,7 +42408,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3928562015333539773, guid: 61d6ca4077bb3394d8ad1330502177e5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.5162773
+      value: 1.59
       objectReference: {fileID: 0}
     - target: {fileID: 3928562015333539773, guid: 61d6ca4077bb3394d8ad1330502177e5, type: 3}
       propertyPath: m_LocalPosition.y
@@ -50789,6 +50789,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1841041137}
     m_Modifications:
+    - target: {fileID: 472233069, guid: 52fa4615a90b2ca49b604132da4bcc7c, type: 3}
+      propertyPath: m_fontSize
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 472233069, guid: 52fa4615a90b2ca49b604132da4bcc7c, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 120
+      objectReference: {fileID: 0}
     - target: {fileID: 1209796663, guid: 52fa4615a90b2ca49b604132da4bcc7c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

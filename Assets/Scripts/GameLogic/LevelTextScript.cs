@@ -18,7 +18,7 @@ public class LevelTextScript : MonoBehaviour
     public TMP_Text o;
     public TMP_Text v;
     public TMP_Text e;
-    public TMP_Text ar1, ar2, ar3, ar4, ar5, ar6, ar7, ar8, ar9;
+    public TMP_Text ar1, ar2, ar3, ar4, ar5, ar6, ar7, ar8, ar9, ar10;
     
 
     void Start()
@@ -65,7 +65,6 @@ public class LevelTextScript : MonoBehaviour
         switch (progression)
         {
             case 1:
-                //TMP_Text m, o, v, e; TMP_Text ar1;
                 FaderText(m);
                 FaderText(o);
                 FaderText(v);
@@ -73,36 +72,29 @@ public class LevelTextScript : MonoBehaviour
                 FaderText(ar1);
                 break;
             case 2:
-                //TMP_Text ar2;
                 FaderText(ar2);
                 break;
             case 3:
-                //TMP_Text ar3;
                 FaderText(ar3);
                 break;
             case 4:
-                //TMP_Text ar4;
                 FaderText(ar4);
                 break;
             case 5:
-                //TMP_Text ar5;
                 FaderText(ar5);
                 break;
             case 6:
-                //TMP_Text ar6;
                 FaderText(ar6);
                 break;
             case 7:
-                //TMP_Text ar7;
                 FaderText(ar7);
-                break;
-            case 8:
-                //TMP_Text ar8;
                 FaderText(ar8);
                 break;
-            case 9:
-                //TMP_Text ar9;
+            case 8:
                 FaderText(ar9);
+                break;
+            case 9:
+                FaderText(ar10);
                 break;
             default:
                 break;

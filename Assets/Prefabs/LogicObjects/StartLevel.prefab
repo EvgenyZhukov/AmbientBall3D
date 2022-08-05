@@ -58,6 +58,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d8958a7c8ceca843aeb7f11bf0bf850, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SaveLevelScript: {fileID: 0}
-  checkPoint: {fileID: 694377515707276017}
+  saveLevelScript: {fileID: 0}
+  saveGameScript: {fileID: 0}
+  startPoint: {fileID: 694377515707276017}
   CameraController: {fileID: 0}

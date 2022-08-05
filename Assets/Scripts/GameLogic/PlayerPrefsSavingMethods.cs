@@ -482,6 +482,32 @@ namespace PlayerPrefsSavingMethods
             }
             return mode;
         }
+
+        public static void SetCheckpoitTextSaving(bool check)
+        {
+            if (check)
+            {
+                PlayerPrefs.SetInt("checkpoitText", 1);
+            }
+            else
+            {
+                PlayerPrefs.SetInt("checkpoitText", 0);
+            }
+        }
+        public static bool GetCheckpoitTextSaving()
+        {
+            int check = PlayerPrefs.GetInt("checkpoitText");
+            bool mode;
+            if (check == 1)
+            {
+                mode = true;
+            }
+            else
+            {
+                mode = false;
+            }
+            return mode;
+        }
         #endregion
     }
 }

@@ -8,6 +8,7 @@ public class CheckPoint : MonoBehaviour
     public SaveLevelScript saveLevelScript;
     public SaveGameScript saveGameScript;
     public ScriptUI scriptUI;
+    //public LevelTextScript levelTextScript;
 
     public GameObject checkPoint;
     public ParticleSystem explode;
@@ -16,6 +17,7 @@ public class CheckPoint : MonoBehaviour
 
     void Start()
     {
+        //levelTextScript = FindObjectOfType<LevelTextScript>();
         saveLevelScript = FindObjectOfType<SaveLevelScript>();
     }
 
@@ -28,6 +30,9 @@ public class CheckPoint : MonoBehaviour
             SaveLoadData.SaveCamAxisTemp(CameraController.X, CameraController.Y);
             saveLevelScript.saving = true;
             saveGameScript.saving = true;
+            //levelTextScript.progression = SaveLoadData.GetTextProgress();
+
+            Invoke("ChangeCheckPointText", 1.6f);
 
             Invoke("Effect", 0.0f);
             Invoke("Off", 3f);
@@ -53,5 +58,10 @@ public class CheckPoint : MonoBehaviour
     void Off()
     {
         checkPoint.SetActive(false);
+    }
+    void ChangeCheckPointText()
+    {
+        scriptUI.gameSaved.text = "game saved...";
+        SaveLoadData.SetCheckpoitTextSaving(true);
     }
 }

@@ -43,7 +43,7 @@ public class SaveGameScript : MonoBehaviour
         public float xPos, yPos, zPos;
         public int maxLevel;
         public bool inProgress;
-        public int[] stars = new int[9];
+        public int[] stars = new int[10];
         public int starsTotal;
     }
     #endregion

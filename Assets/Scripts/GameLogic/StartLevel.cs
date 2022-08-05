@@ -8,13 +8,17 @@ public class StartLevel : MonoBehaviour
     public SaveLevelScript saveLevelScript;
     public SaveGameScript saveGameScript;
 
-    public GameObject checkPoint;
+    public GameObject startPoint;
     public CameraController CameraController;
 
     void Start()
     {
         saveLevelScript = FindObjectOfType<SaveLevelScript>();
-        SaveLoadData.SetTextProgress(0);
+        if (!SaveLoadData.GetInProgress())
+        {
+            SaveLoadData.SetTextProgress(0);
+            SaveLoadData.SetCheckpoitTextSaving(true);
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -27,14 +31,14 @@ public class StartLevel : MonoBehaviour
             SaveLoadData.SaveCamAxisTemp(CameraController.X, CameraController.Y);
             saveLevelScript.saving = true;
             saveGameScript.saving = true;
-            Invoke("Off", 0f);
+            Invoke("Off", 0.1f);
         }
     }
     /// <summary>
-    /// Отключает систему частиц при активации чекпоинта
+    /// Отключает стартовый чекпоинт
     /// </summary>
     void Off()
     {
-        checkPoint.SetActive(false);
+        startPoint.SetActive(false);
     }
 }
