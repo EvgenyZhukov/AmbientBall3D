@@ -37,7 +37,7 @@ public class EndLevel : MonoBehaviour
     {
         if (other.CompareTag("Player") && !active)
         {
-            scriptUI.gameFinished.transform.gameObject.SetActive(true);
+            scriptUI.gameFinished.transform.gameObject.SetActive(true);  // включение текста
             scriptUI.endLevelTextOn = true;
 
             enter = true;
@@ -56,30 +56,7 @@ public class EndLevel : MonoBehaviour
                 gameScript.scene++;
             }
 
-            if (SaveLoadData.GetContinuousTaken())
-            {
-                stars = 1;
-                scriptUI.gameFinished.text = "level finished! \n not bad! \n 1 star!";
-                Invoke("OnStar_1", starDelay);
-            }
-            else
-            {
-                if (gameScript.lives >= 2)
-                {
-                    stars = 3;
-                    scriptUI.gameFinished.text = "level finished! \n great! \n 3 stars!";
-                    Invoke("OnStar_1", starDelay);
-                    Invoke("OnStar_3", starDelay*2);
-                    Invoke("OnStar_3", starDelay*3);
-                }
-                else if (gameScript.lives < 2)
-                {
-                    stars = 2;
-                    scriptUI.gameFinished.text = "level finished! \n good! \n 2 stars!";
-                    Invoke("OnStar_1", starDelay);
-                    Invoke("OnStar_2", starDelay*2);
-                }
-            }
+            
             SaveLoadData.SetStars(SceneManager.GetActiveScene().buildIndex, stars);
 
             SaveLoadData.ResetCoordinates();
@@ -90,7 +67,7 @@ public class EndLevel : MonoBehaviour
             saveGameScript.saving = true;
 
             Invoke("Fade", 0.8f);
-            Invoke("NextLevel", 2f);  // Следующий уровень
+            //Invoke("NextLevel", 2f);  // Следующий уровень
 
             active = true;
         }
@@ -106,11 +83,11 @@ public class EndLevel : MonoBehaviour
             
             if (x > 0)
             {
-                x -= scaleSpeed * Time.deltaTime; ;
-                y -= scaleSpeed * Time.deltaTime; ;
-                z -= scaleSpeed * Time.deltaTime; ;
+                x -= scaleSpeed * Time.deltaTime;
+                y -= scaleSpeed * Time.deltaTime;
+                z -= scaleSpeed * Time.deltaTime;
                 player.transform.localScale = new Vector3(x, y, z);
-                scaleSpeed += 0.03f;
+                scaleSpeed += 0.02f;
             }
             
             if (player.transform.position == transform.position && !locker)
@@ -118,6 +95,8 @@ public class EndLevel : MonoBehaviour
                 Instantiate(explosion, player.transform.position, Quaternion.identity);  // Воспроизводит эффект перехода на следующий уровень
 
                 player.gameObject.SetActive(false); // Выключает модель игрока
+                
+                WinScreen();
                 locker = true;
             }
         }
@@ -130,10 +109,38 @@ public class EndLevel : MonoBehaviour
     {
         SceneManager.LoadScene(gameScript.scene);
     }
-    private void Fade()
+    void Fade()
     {
         scriptUI.panelObjFader.SetActive(true);
         faderMainScript.fading = true;
+    }
+
+    void WinScreen()
+    {
+        if (SaveLoadData.GetContinuousTaken())
+        {
+            stars = 1;
+            scriptUI.gameFinished.text = "level finished! \n not bad! \n 1 star!";
+            Invoke("OnStar_1", starDelay);
+        }
+        else
+        {
+            if (gameScript.lives >= 2)
+            {
+                stars = 3;
+                scriptUI.gameFinished.text = "level finished! \n great! \n 3 stars!";
+                Invoke("OnStar_1", starDelay);
+                Invoke("OnStar_2", starDelay * 2);
+                Invoke("OnStar_3", starDelay * 3);
+            }
+            else if (gameScript.lives < 2)
+            {
+                stars = 2;
+                scriptUI.gameFinished.text = "level finished! \n good! \n 2 stars!";
+                Invoke("OnStar_1", starDelay);
+                Invoke("OnStar_2", starDelay * 2);
+            }
+        }
     }
 
     void OnStar_1()

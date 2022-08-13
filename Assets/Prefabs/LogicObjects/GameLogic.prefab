@@ -1596,6 +1596,7 @@ MonoBehaviour:
     maxLevel: 0
     inProgress: 0
     stars: 000000000000000000000000000000000000000000000000000000000000000000000000
+    starsTotal: 0
   identifier: ambientBallSavedGameData
   saving: 0
   loading: 0
@@ -14609,7 +14610,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9202963150268260669, guid: 53b72d48ad651244598a444a04ac81d0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 150
+      value: 160
       objectReference: {fileID: 0}
     - target: {fileID: 9202963150268260669, guid: 53b72d48ad651244598a444a04ac81d0, type: 3}
       propertyPath: m_LocalPosition.y
@@ -14704,7 +14705,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9202963150268260669, guid: 53b72d48ad651244598a444a04ac81d0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -150
+      value: -160
       objectReference: {fileID: 0}
     - target: {fileID: 9202963150268260669, guid: 53b72d48ad651244598a444a04ac81d0, type: 3}
       propertyPath: m_LocalPosition.y
