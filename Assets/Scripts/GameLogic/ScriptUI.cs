@@ -68,6 +68,7 @@ public class ScriptUI : MonoBehaviour
     public bool endLevelTextOn = false;
     public bool accelerometerActive = false;
     public bool leftHandedControl = false;
+    public bool offTextAfterNextLevelButton = false;
 
     void Start()
     {
@@ -528,7 +529,10 @@ public class ScriptUI : MonoBehaviour
                     FaderTextOn(gameFinished, "endLevelText");
                     break;
                 case (false):
-                    FaderTextOff(gameFinished, "endLevelText");
+                    if (offTextAfterNextLevelButton)
+                    {
+                        FaderTextOff(gameFinished, "endLevelText");
+                    }
                     break;
             }
         }

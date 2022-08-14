@@ -14,145 +14,162 @@ public class EndLevel : MonoBehaviour
     public bool active = false;
     public GameObject player;
     public GameObject explosion;
+    public GameObject endLevelEffect;
     private bool enter = false;
     private float moveToExitSpeed = 0.1f;
-    private float scaleSpeed = 0.1f;
+    private float moveToExitAcceleration = 0.03f;
+    private float scaleCangeSpeed = 0.1f;
+    private float scaleCangeAcceleration = 0.02f;
     private bool locker = false;
     private float x, y, z;
-    private int stars;
-    private float starDelay = 0.03f;
+    private int stars = 0;
+    private float firstStarDelayCoef = 2f;
+    private float starDelay = 1f;
+    private float winScreenDelay = 0.5f;
 
-    private void Start()
+    void Start()
     {
         x = player.transform.localScale.x;
         y = player.transform.localScale.y;
         z = player.transform.localScale.z;
     }
 
+    void Update()
+    {
+        EnterInEndGamePortal();
+    }
+
     /// <summary>
-    /// Метод переключения уровня
+    /// Переход на новый уровень
     /// </summary>
-    /// <param name="other">Триггер финиша</param>
+    /// <param name="other">Колайдер модели игрока</param>
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && !active)
         {
-            scriptUI.gameFinished.transform.gameObject.SetActive(true);  // включение текста
-            scriptUI.endLevelTextOn = true;
-
-            enter = true;
-
-            player.GetComponent<Rigidbody>().useGravity = false;
-
-            int maxLvl = SaveLoadData.GetLevelProgress();
-
-            if (maxLvl == gameScript.scene)
-            {
-                gameScript.scene++;
-                SaveLoadData.SetLevelProgress(gameScript.scene);
-            }
-            else
-            {
-                gameScript.scene++;
-            }
-
-            
-            SaveLoadData.SetStars(SceneManager.GetActiveScene().buildIndex, stars);
-
-            SaveLoadData.ResetCoordinates();
+            GameProgressionSaving();
+            SaveLoadData.ResetCoordinates();    // Сбросы временных данных
             SaveLoadData.ResetLives();
             SaveLoadData.ResetTextProgress();
 
-            SaveLoadData.SetScene(gameScript.scene);       // Записывает номер запускаемой сцены следующего уровня
-            saveGameScript.saving = true;
+            enter = true;   // активирует режим входа в портал
+            player.GetComponent<Rigidbody>().useGravity = false; // выключает гравитацию для модели игрока
 
-            Invoke("Fade", 0.8f);
-            //Invoke("NextLevel", 2f);  // Следующий уровень
 
-            active = true;
+            active = true;  // блокировщик повтора метода
         }
     }
-
-    void Update()
+    /// <summary>
+    /// Вход в портал перехода на следующий уровень
+    /// </summary>
+    void EnterInEndGamePortal()
     {
         if (enter)
         {
-            moveToExitSpeed += 0.03f;
+            moveToExitSpeed += moveToExitAcceleration;
             float step = moveToExitSpeed * Time.deltaTime;
             player.transform.position = Vector3.MoveTowards(player.transform.position, transform.position, step);
-            
+
             if (x > 0)
             {
-                x -= scaleSpeed * Time.deltaTime;
-                y -= scaleSpeed * Time.deltaTime;
-                z -= scaleSpeed * Time.deltaTime;
+                x -= scaleCangeSpeed * Time.deltaTime;
+                y -= scaleCangeSpeed * Time.deltaTime;
+                z -= scaleCangeSpeed * Time.deltaTime;
                 player.transform.localScale = new Vector3(x, y, z);
-                scaleSpeed += 0.02f;
+                scaleCangeSpeed += scaleCangeAcceleration;
             }
-            
+
             if (player.transform.position == transform.position && !locker)
             {
                 Instantiate(explosion, player.transform.position, Quaternion.identity);  // Воспроизводит эффект перехода на следующий уровень
-
+                endLevelEffect.SetActive(false);
                 player.gameObject.SetActive(false); // Выключает модель игрока
-                
-                WinScreen();
+
+                StartCoroutine(StarsInitiation());
+                Invoke("WinGameScreen", winScreenDelay);
+
                 locker = true;
             }
         }
     }
-
     /// <summary>
-    /// Метод загрузки следующего уровня
+    /// Сохранение прогресса прохождения игры (завершение уровня)
     /// </summary>
-    void NextLevel()
+    void GameProgressionSaving()
     {
-        SceneManager.LoadScene(gameScript.scene);
-    }
-    void Fade()
-    {
-        scriptUI.panelObjFader.SetActive(true);
-        faderMainScript.fading = true;
-    }
-
-    void WinScreen()
-    {
-        if (SaveLoadData.GetContinuousTaken())
+        int maxLvl = SaveLoadData.GetLevelProgress();
+        if (maxLvl == gameScript.scene)
         {
-            stars = 1;
-            scriptUI.gameFinished.text = "level finished! \n not bad! \n 1 star!";
-            Invoke("OnStar_1", starDelay);
+            gameScript.scene++;
+            SaveLoadData.SetLevelProgress(gameScript.scene);
         }
         else
         {
-            if (gameScript.lives >= 2)
-            {
-                stars = 3;
-                scriptUI.gameFinished.text = "level finished! \n great! \n 3 stars!";
-                Invoke("OnStar_1", starDelay);
-                Invoke("OnStar_2", starDelay * 2);
-                Invoke("OnStar_3", starDelay * 3);
-            }
-            else if (gameScript.lives < 2)
+            gameScript.scene++;
+        }
+        SaveLoadData.SetScene(gameScript.scene);       // Записывает номер запускаемой сцены следующего уровня
+
+        if (SaveLoadData.GetContinuousTaken())
+        {
+            stars = 1;
+        }
+        else
+        {
+            if (gameScript.lives < 2)
             {
                 stars = 2;
-                scriptUI.gameFinished.text = "level finished! \n good! \n 2 stars!";
-                Invoke("OnStar_1", starDelay);
-                Invoke("OnStar_2", starDelay * 2);
+            }
+            else if (gameScript.lives >= 2)
+            {
+                stars = 3;
             }
         }
-    }
+        SaveLoadData.SetStars(SceneManager.GetActiveScene().buildIndex, stars); // сохранение количества звезд пройденого уровня
 
-    void OnStar_1()
-    {
-        scriptUI.star1.gameObject.SetActive(true);
+        saveGameScript.saving = true;   // сохранение игры в файл
     }
-    void OnStar_2()
+    /// <summary>
+    /// Отображение звезд успеха после завершения уровня
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator StarsInitiation ()
     {
-        scriptUI.star2.gameObject.SetActive(true);
+        switch (stars)
+        {
+            case 1:
+                scriptUI.gameFinished.text = "level finished! \n not bad! \n 1 star!";
+                yield return new WaitForSeconds(starDelay * firstStarDelayCoef);
+                scriptUI.star1.gameObject.SetActive(true);
+                yield break;
+            case 2:
+                scriptUI.gameFinished.text = "level finished! \n good! \n 2 stars!";
+                yield return new WaitForSeconds(starDelay * firstStarDelayCoef);
+                scriptUI.star1.gameObject.SetActive(true);
+                yield return new WaitForSeconds(starDelay);
+                scriptUI.star2.gameObject.SetActive(true);
+                yield break;
+            case 3:
+                scriptUI.gameFinished.text = "level finished! \n great! \n 3 stars!";
+                yield return new WaitForSeconds(starDelay * firstStarDelayCoef);
+                scriptUI.star1.gameObject.SetActive(true);
+                yield return new WaitForSeconds(starDelay);
+                scriptUI.star2.gameObject.SetActive(true);
+                yield return new WaitForSeconds(starDelay);
+                scriptUI.star3.gameObject.SetActive(true);
+                yield break;
+            default:
+                break;
+        }
     }
-    void OnStar_3()
+    /// <summary>
+    /// Отображение победного экрана
+    /// </summary>
+    void WinGameScreen()
     {
-        scriptUI.star3.gameObject.SetActive(true);
+        scriptUI.gameFinished.transform.gameObject.SetActive(true);  // включение текста
+        scriptUI.endLevelTextOn = true;
+
+        scriptUI.panelObjFader.SetActive(true);
+        faderMainScript.fading = true;
     }
 }
