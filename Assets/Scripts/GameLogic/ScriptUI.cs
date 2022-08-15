@@ -27,6 +27,7 @@ public class ScriptUI : MonoBehaviour
     public TMP_Text rightTopText;
     public TMP_Text leftTopText;
     public TMP_Text startButtonText;
+    public TMP_Text startNextLevelText;
 
     public RectTransform rectTransformButtonA;
     public RectTransform rectTransformButtonB;
@@ -139,6 +140,13 @@ public class ScriptUI : MonoBehaviour
         startButton.interactable = false;
 
         Resume();
+    }
+    /// <summary>
+    /// Кнопка начала следующего уровня
+    /// </summary>
+    public void StartNextLevelButton()
+    {
+        offTextAfterNextLevelButton = true;
     }
     /// <summary>
     /// Ставит игру на паузу, активирует кнопку старта игры
@@ -527,11 +535,13 @@ public class ScriptUI : MonoBehaviour
             {
                 case (true):
                     FaderTextOn(gameFinished, "endLevelText");
+                    FaderTextOn(startNextLevelText, "endLevelText");
                     break;
                 case (false):
                     if (offTextAfterNextLevelButton)
                     {
                         FaderTextOff(gameFinished, "endLevelText");
+                        FaderTextOff(startNextLevelText, "endLevelText");
                     }
                     break;
             }

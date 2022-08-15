@@ -167,6 +167,7 @@ public class EndLevel : MonoBehaviour
     void WinGameScreen()
     {
         scriptUI.gameFinished.transform.gameObject.SetActive(true);  // включение текста
+        scriptUI.startNextLevelText.transform.parent.gameObject.SetActive(true);
         scriptUI.endLevelTextOn = true;
 
         scriptUI.panelObjFader.SetActive(true);
