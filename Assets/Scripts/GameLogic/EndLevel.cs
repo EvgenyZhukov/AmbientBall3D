@@ -23,8 +23,7 @@ public class EndLevel : MonoBehaviour
     private bool locker = false;
     private float x, y, z;
     private int stars = 0;
-    private float firstStarDelayCoef = 2f;
-    private float starDelay = 1f;
+    private float starDelay = 0.5f;
     private float winScreenDelay = 0.5f;
 
     void Start()
@@ -138,19 +137,19 @@ public class EndLevel : MonoBehaviour
         {
             case 1:
                 scriptUI.gameFinished.text = "level finished! \n not bad! \n 1 star!";
-                yield return new WaitForSeconds(starDelay * firstStarDelayCoef);
+                yield return new WaitForSeconds(starDelay);
                 scriptUI.star1.gameObject.SetActive(true);
                 yield break;
             case 2:
                 scriptUI.gameFinished.text = "level finished! \n good! \n 2 stars!";
-                yield return new WaitForSeconds(starDelay * firstStarDelayCoef);
+                yield return new WaitForSeconds(starDelay);
                 scriptUI.star1.gameObject.SetActive(true);
                 yield return new WaitForSeconds(starDelay);
                 scriptUI.star2.gameObject.SetActive(true);
                 yield break;
             case 3:
                 scriptUI.gameFinished.text = "level finished! \n great! \n 3 stars!";
-                yield return new WaitForSeconds(starDelay * firstStarDelayCoef);
+                yield return new WaitForSeconds(starDelay);
                 scriptUI.star1.gameObject.SetActive(true);
                 yield return new WaitForSeconds(starDelay);
                 scriptUI.star2.gameObject.SetActive(true);
@@ -171,6 +170,6 @@ public class EndLevel : MonoBehaviour
         scriptUI.endLevelTextOn = true;
 
         scriptUI.panelObjFader.SetActive(true);
-        faderMainScript.fading = true;
+        faderMainScript.fadingHalf = true;
     }
 }

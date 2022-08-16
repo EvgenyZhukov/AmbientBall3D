@@ -21,6 +21,9 @@ public class ScriptUI : MonoBehaviour
     public GameObject panelObjFader;
     public TMP_Text livesNumber;
     public GameObject pauseCanvas;
+    public ParticleSystem particalStar1;
+    public ParticleSystem particalStar2;
+    public ParticleSystem particalStar3;
 
     public TMP_Text rightBottonText;
     public TMP_Text leftBottonText;
@@ -147,6 +150,21 @@ public class ScriptUI : MonoBehaviour
     public void StartNextLevelButton()
     {
         offTextAfterNextLevelButton = true;
+        StopParticleLoop(particalStar1);
+        StopParticleLoop(particalStar2);
+        StopParticleLoop(particalStar3);
+        faderMainScript.fading = true;
+
+        Invoke("ReloadScene", 0.8f);
+    }
+    /// <summary>
+    /// Отключает зацикливание системы частиц
+    /// </summary>
+    /// <param name="particleSystem">Система частиц</param>
+    public void StopParticleLoop(ParticleSystem particleSystem)
+    {
+        var ps = particleSystem.main;
+        ps.startLifetime = 0;
     }
     /// <summary>
     /// Ставит игру на паузу, активирует кнопку старта игры
