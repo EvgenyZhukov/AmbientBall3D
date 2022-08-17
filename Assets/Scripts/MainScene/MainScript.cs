@@ -49,6 +49,7 @@ public class MainScript : MonoBehaviour
     public Button lineReturnInGameButton;
     public Button lineChangeLevelButton;
     public Button lineNoAdsButton;
+    public Button lineDeleteGameProgress;
     [Header("Переменные для работы с текстом")]
     public TMP_Text soundStatus;
     public TMP_Text musicStatus;
@@ -57,6 +58,7 @@ public class MainScript : MonoBehaviour
     public TMP_Text controlTypeText;
     public TMP_Text starsNumber;
     public TMP_Text nextLevelsButtonToEpisode2;
+    public TMP_Text deleteGame;
     public Material mainText;
     private Color turquoise = new Color(0, 241, 255, 255);
     private float glowPower;
@@ -96,10 +98,10 @@ public class MainScript : MonoBehaviour
     public int starsTotal;
     public GameObject needMoreStarsToEpisode2;
     public GameObject nextToEpisode2;
+    public bool confirmDeleteGameProgress = false;
 
     void Start()
     {
-        //PlayerPrefs.DeleteAll();
         faderMain.brighten = true;
         audioScript.fadeIn = true;
 
@@ -327,12 +329,19 @@ public class MainScript : MonoBehaviour
         DisableButtons();
         /////////////////////////////////////////////////////no ads
     }
-    /*
-    public void ButtonHelp()
+    public void ButtonDeleteGame()
     {
-        //reserved
+        deleteGame.text = "really?";
+
+        if (confirmDeleteGameProgress)
+        {
+            PlayerPrefs.DeleteAll();
+            saveGameScript.saving = true;
+            Fade();
+            Invoke("StartLevel", lvlStartTime);
+        }
+        confirmDeleteGameProgress = true;
     }
-    */
     /// <summary>
     /// Возврат к игре
     /// </summary>
@@ -343,9 +352,7 @@ public class MainScript : MonoBehaviour
         DisableButtons();
         Fade();
         Invoke("StartLevel", lvlStartTime);
-
     }
-
     #endregion
 
     #region Кнопки запуска уровней логика запуска уровней
@@ -421,6 +428,7 @@ public class MainScript : MonoBehaviour
     }
     public void DisableButtons()
     {
+        lineDeleteGameProgress.interactable = false;
         lineOptionsButton.interactable = false;
         linePlayGameButton.interactable = false;
         lineReturnInGameButton.interactable = false;
@@ -431,6 +439,7 @@ public class MainScript : MonoBehaviour
     }
     public void EnableButtons()
     {
+        lineDeleteGameProgress.interactable = true;
         lineOptionsButton.interactable = true;
         linePlayGameButton.interactable = true;
         lineReturnInGameButton.interactable = true;

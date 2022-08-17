@@ -1347,6 +1347,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3928562015333539773, guid: 61d6ca4077bb3394d8ad1330502177e5, type: 3}
   m_PrefabInstance: {fileID: 82093674}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &88268819 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1209796663, guid: 52fa4615a90b2ca49b604132da4bcc7c, type: 3}
+  m_PrefabInstance: {fileID: 3267381791923687756}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &90992722
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27282,6 +27293,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3928562015333539773, guid: 61d6ca4077bb3394d8ad1330502177e5, type: 3}
   m_PrefabInstance: {fileID: 1066746115}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1123373501 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 472233069, guid: 52fa4615a90b2ca49b604132da4bcc7c, type: 3}
+  m_PrefabInstance: {fileID: 3267381791923687756}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1124677598
 GameObject:
   m_ObjectHideFlags: 0
@@ -49625,7 +49647,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2097181725
 Transform:
   m_ObjectHideFlags: 0
@@ -50361,6 +50383,7 @@ MonoBehaviour:
   lineReturnInGameButton: {fileID: 128838884}
   lineChangeLevelButton: {fileID: 497635390}
   lineNoAdsButton: {fileID: 997441604}
+  lineDeleteGameProgress: {fileID: 88268819}
   soundStatus: {fileID: 1742297169}
   musicStatus: {fileID: 1947394387}
   accelerometerText: {fileID: 1145646387}
@@ -50368,6 +50391,7 @@ MonoBehaviour:
   controlTypeText: {fileID: 1733242016}
   starsNumber: {fileID: 867667378}
   nextLevelsButtonToEpisode2: {fileID: 1044457303}
+  deleteGame: {fileID: 1123373501}
   mainText: {fileID: 2221339815594318316, guid: 5bb28bc815d3b8047918cba3a5c8d410, type: 2}
   glowSpeed: 3
   glowMax: 0.64
@@ -50399,6 +50423,7 @@ MonoBehaviour:
   starsTotal: 0
   needMoreStarsToEpisode2: {fileID: 2120022622}
   nextToEpisode2: {fileID: 1640334165}
+  confirmDeleteGameProgress: 0
 --- !u!114 &2127646542
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -50790,17 +50815,29 @@ PrefabInstance:
     m_TransformParent: {fileID: 1841041137}
     m_Modifications:
     - target: {fileID: 472233069, guid: 52fa4615a90b2ca49b604132da4bcc7c, type: 3}
+      propertyPath: m_text
+      value: delete game
+      objectReference: {fileID: 0}
+    - target: {fileID: 472233069, guid: 52fa4615a90b2ca49b604132da4bcc7c, type: 3}
       propertyPath: m_fontSize
-      value: 120
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 472233069, guid: 52fa4615a90b2ca49b604132da4bcc7c, type: 3}
       propertyPath: m_fontSizeBase
-      value: 120
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1209796663, guid: 52fa4615a90b2ca49b604132da4bcc7c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2127646541}
+    - target: {fileID: 1209796663, guid: 52fa4615a90b2ca49b604132da4bcc7c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ButtonDeleteGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 1216199157, guid: 52fa4615a90b2ca49b604132da4bcc7c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1216199161, guid: 52fa4615a90b2ca49b604132da4bcc7c, type: 3}
       propertyPath: m_Camera
       value: 
