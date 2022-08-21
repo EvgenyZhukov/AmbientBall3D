@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 341483350959601732}
   - component: {fileID: 950906949931976560}
-  - component: {fileID: 2053862887111223726}
   m_Layer: 0
   m_Name: LevelElementsInteractive
   m_TagString: Untagged
@@ -51,35 +50,9 @@ MonoBehaviour:
     activities: 
     velocities: []
     angularVelocities: []
+    textProgress: 0
+    continuousTaken: 0
   identifier: ambientBallSavedData
   saving: 0
   loading: 0
   numbersLevelObj: 0
---- !u!114 &2053862887111223726
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 341483350959601731}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9f643716a64ee545a694b5602093436, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m: {fileID: 0}
-  o: {fileID: 0}
-  v: {fileID: 0}
-  e: {fileID: 0}
-  ar1: {fileID: 0}
-  ar2: {fileID: 0}
-  ar3: {fileID: 0}
-  ar4: {fileID: 0}
-  ar5: {fileID: 0}
-  ar6: {fileID: 0}
-  ar7: {fileID: 0}
-  ar8: {fileID: 0}
-  ar9: {fileID: 0}
-  ar10: {fileID: 0}
-  progression: 0
-  change: 0
