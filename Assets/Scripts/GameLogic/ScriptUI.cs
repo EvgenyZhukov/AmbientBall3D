@@ -14,8 +14,9 @@ public class ScriptUI : MonoBehaviour
     public Fader faderMainScript;
     public FixedJoystick JoystickCam;
     public FixedJoystick JoystickMove;
-    public SaveLevelScript SaveLevelScript;
-    public CameraController CameraController;
+    public SaveLevelScript saveLevelScript;
+    public CameraController cameraController;
+    public LevelTextScript levelTextScript;
     [Header("Объекты")]
     public GameObject live1;
     public GameObject panelObjFader;
@@ -73,10 +74,12 @@ public class ScriptUI : MonoBehaviour
     public bool accelerometerActive = false;
     public bool leftHandedControl = false;
     public bool offTextAfterNextLevelButton = false;
+    bool levelLaunchCheck = false;
 
     void Start()
     {
-        SaveLevelScript = FindObjectOfType<SaveLevelScript>();
+        saveLevelScript = FindObjectOfType<SaveLevelScript>();
+        levelTextScript = FindObjectOfType<LevelTextScript>();
 
         SetControl();
         SettingUI();
@@ -101,7 +104,7 @@ public class ScriptUI : MonoBehaviour
     /// </summary>
     public void MainButton()
     {
-        SaveLevelScript.saving = true;      ////////////////////////////Сохранение уровня
+        saveLevelScript.saving = true;      ////////////////////////////Сохранение уровня
         DeactivateUI();
         panelObjFader.SetActive(true);
         faderMainScript.fading = true;
@@ -114,7 +117,7 @@ public class ScriptUI : MonoBehaviour
     {
         SaveLoadData.SetInProgressTemp(true);
         SaveLoadData.SaveCoordinatesTemp(GameScript.player.transform.position.x, GameScript.player.transform.position.y, GameScript.player.transform.position.z);
-        SaveLoadData.SaveCamAxisTemp(CameraController.X, CameraController.Y);
+        SaveLoadData.SaveCamAxisTemp(cameraController.X, cameraController.Y);
 
         SceneManager.LoadScene(0);
     }
@@ -181,6 +184,7 @@ public class ScriptUI : MonoBehaviour
     {
         Time.timeScale = 1f;
         ResetAccelerometerZero();
+        levelTextScript.textOnLaunch = true;
 
         Invoke("OffPauseCanvas", 0.6f);
     }
@@ -450,9 +454,10 @@ public class ScriptUI : MonoBehaviour
     /// </summary>
     private void FirstPause()
     {
-        bool levelLaunchCheck = SaveLoadData.GetFirstLevelLaunch();
+        levelLaunchCheck = SaveLoadData.GetFirstLevelLaunch();
         if (levelLaunchCheck)
         {
+            levelTextScript.textOnLaunch = false;
             DeactivateUI();
             pauseCanvas.SetActive(true);
             pauseTextOn = true;

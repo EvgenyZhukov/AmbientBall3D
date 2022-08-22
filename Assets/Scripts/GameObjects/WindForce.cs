@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WindForce : MonoBehaviour
 {
-    public float force = 5;
+    public float force = 15;
 
     /// <summary>
     /// Сдвигающая сила, срабатывает при соприкосновении коллайдеров

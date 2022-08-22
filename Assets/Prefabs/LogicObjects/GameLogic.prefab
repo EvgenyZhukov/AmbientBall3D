@@ -1493,8 +1493,9 @@ MonoBehaviour:
   faderMainScript: {fileID: 6608397129349903172}
   JoystickCam: {fileID: 496341057128096574}
   JoystickMove: {fileID: 496341056428353416}
-  SaveLevelScript: {fileID: 0}
-  CameraController: {fileID: 7706565554191332334}
+  saveLevelScript: {fileID: 0}
+  cameraController: {fileID: 7706565554191332334}
+  levelTextScript: {fileID: 0}
   live1: {fileID: 6791362883740248691}
   panelObjFader: {fileID: 7505028770541277459}
   livesNumber: {fileID: 80822870499940263}
@@ -13633,6 +13634,7 @@ MonoBehaviour:
   fading: 0
   brighten: 1
   fadingHalf: 0
+  fadingAlmost: 0
   panel: {fileID: 5560710252784374924}
   panelObj: {fileID: 7505028770541277459}
 --- !u!1 &7706565553284837918

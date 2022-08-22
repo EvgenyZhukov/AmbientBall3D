@@ -8,6 +8,7 @@ public class Fader : MonoBehaviour
     public bool fading = false;
     public bool brighten = false;
     public bool fadingHalf = false;
+    public bool fadingAlmost = false;
     private float r;
     private float g;
     private float b;
@@ -32,9 +33,9 @@ public class Fader : MonoBehaviour
     /// </summary>
     private void Fade()
     {
-        switch ((fading, brighten, fadingHalf))
+        switch ((fading, brighten, fadingHalf, fadingAlmost))
         {
-            case (true, false, false):
+            case (true, false, false, false):
                 if (a < 1)
                 {
                     a += changeStep;
@@ -45,7 +46,7 @@ public class Fader : MonoBehaviour
                     fading = false;
                 }
                 break;
-            case (false, true, false):
+            case (false, true, false, false):
                 if (a > 0)
                 {
                     a -= changeStep;
@@ -57,15 +58,26 @@ public class Fader : MonoBehaviour
                     panelObj.SetActive(false);
                 }
                 break;
-            case (false, false, true):
+            case (false, false, true, false):
                 if (a < 0.5f)
                 {
-                    a += changeStep*2;
+                    a += changeStep * 2;
                     ChangePanelColor();
                 }
                 else if (a >= 0.5f)
                 {
                     fadingHalf = false;
+                }
+                break;
+            case (false, false, false, true):
+                if (a < 0.7f)
+                {
+                    a += changeStep * 1/0.7f;
+                    ChangePanelColor();
+                }
+                else if (a >= 0.7f)
+                {
+                    fadingAlmost = false;
                 }
                 break;
             default:

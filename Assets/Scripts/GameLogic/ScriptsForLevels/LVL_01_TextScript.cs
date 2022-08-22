@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+/// <summary>
+/// Частный случай логики поведения текста на конкретном уровне, необходим контроль переменных получаемых от родителя
+/// </summary>
 public class LVL_01_TextScript : LevelTextScript
 {
     [Header("Уровень 1")]
@@ -21,7 +23,16 @@ public class LVL_01_TextScript : LevelTextScript
 
     void FixedUpdate()
     {
-        if (change)
+        if (textOnLaunch)
+        {
+            if (m) FaderTextOn(m);
+            if (o) FaderTextOn(o);
+            if (v) FaderTextOn(v);
+            if (e) FaderTextOn(e);
+            if (ar1) FaderTextOn(ar1);
+        }
+
+        if (textOff)
         { 
           TextLogicLevel_01();
         }
@@ -32,36 +43,36 @@ public class LVL_01_TextScript : LevelTextScript
         switch (progression)
         {
             case 1:
-                FaderText(m);
-                FaderText(o);
-                FaderText(v);
-                FaderText(e);
-                FaderText(ar1);
+                FaderTextOff(m);
+                FaderTextOff(o);
+                FaderTextOff(v);
+                FaderTextOff(e);
+                FaderTextOff(ar1);
                 break;
             case 2:
-                FaderText(ar2);
+                FaderTextOff(ar2);
                 break;
             case 3:
-                FaderText(ar3);
+                FaderTextOff(ar3);
                 break;
             case 4:
-                FaderText(ar4);
+                FaderTextOff(ar4);
                 break;
             case 5:
-                FaderText(ar5);
+                FaderTextOff(ar5);
                 break;
             case 6:
-                FaderText(ar6);
+                FaderTextOff(ar6);
                 break;
             case 7:
-                FaderText(ar7);
-                FaderText(ar8);
+                FaderTextOff(ar7);
+                FaderTextOff(ar8);
                 break;
             case 8:
-                FaderText(ar9);
+                FaderTextOff(ar9);
                 break;
             case 9:
-                FaderText(ar10);
+                FaderTextOff(ar10);
                 break;
             default:
                 break;

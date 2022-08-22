@@ -9,13 +9,30 @@ public class LevelTextScript : MonoBehaviour
 {
     private float changeStep = 0.04f; // скорость исчезновения текста
     public int progression; //получает из плеер префс
-    public bool change = false; //получает из объекта сцены переключателя
+    public bool textOff = false; //получает из объекта сцены переключателя
     public bool getTextProgress = false;
+    public bool textOnLaunch = true;
 
     /// <summary>
-    /// Меняет альфу текста (делает его прозрачным и наоборот)
+    /// Меняет альфу текста, делает его видимым
     /// </summary>
-    public void FaderText(TMP_Text textObj)
+    public void FaderTextOn(TMP_Text textObj)
+    {
+        if (textObj.color.a < 1)
+        {
+            float aText = textObj.color.a;
+            aText += changeStep;
+            textObj.color = new Color(textObj.color.r, textObj.color.g, textObj.color.b, aText);
+        }
+        else if (textObj.color.a >= 1)
+        {
+            textOnLaunch = false;
+        }
+    }
+    /// <summary>
+    /// Меняет альфу текста, делает его прозрачным
+    /// </summary>
+    public void FaderTextOff(TMP_Text textObj)
     {
         if (textObj.color.a > 0)
         {
@@ -25,7 +42,7 @@ public class LevelTextScript : MonoBehaviour
         }
         else if (textObj.color.a <= 0)
         {
-            change = false;
+            textOff = false;
             textObj.transform.parent.gameObject.SetActive(false);
         }
     }

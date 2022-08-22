@@ -10947,6 +10947,7 @@ MonoBehaviour:
   fading: 0
   brighten: 0
   fadingHalf: 0
+  fadingAlmost: 0
   panel: {fileID: 444956333}
   panelObj: {fileID: 444956330}
 --- !u!114 &444956333
@@ -50415,7 +50416,7 @@ MonoBehaviour:
   musicVolume: -20
   accelerometerActive: 0
   leftHandedControl: 0
-  faderMain: {fileID: 444956332}
+  faderMainScript: {fileID: 444956332}
   panelObj: {fileID: 444956330}
   scene: 0
   currentLvl: 0

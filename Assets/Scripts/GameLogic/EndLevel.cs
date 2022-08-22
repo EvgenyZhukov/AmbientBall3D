@@ -170,6 +170,6 @@ public class EndLevel : MonoBehaviour
         scriptUI.endLevelTextOn = true;
 
         scriptUI.panelObjFader.SetActive(true);
-        faderMainScript.fadingHalf = true;
+        faderMainScript.fadingAlmost = true;
     }
 }

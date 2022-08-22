@@ -87,7 +87,7 @@ public class MainScript : MonoBehaviour
     public bool accelerometerActive = false;
     public bool leftHandedControl = false;
     [Header("Переключение сцен")]
-    public Fader faderMain;
+    public Fader faderMainScript;
     public GameObject panelObj;
     private float lvlStartTime = 1.2f;
     private bool inProgress = false;
@@ -102,7 +102,7 @@ public class MainScript : MonoBehaviour
 
     void Start()
     {
-        faderMain.brighten = true;
+        faderMainScript.brighten = true;
         audioScript.fadeIn = true;
 
         EnableButtons();
@@ -379,7 +379,7 @@ public class MainScript : MonoBehaviour
     private void Fade()
     {
         panelObj.SetActive(true);
-        faderMain.fading = true;
+        faderMainScript.fading = true;
     }
     private void ProgressCheck()
     {

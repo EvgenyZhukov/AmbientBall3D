@@ -24,7 +24,7 @@ public class ArrowPointScript : MonoBehaviour
             locker = true;
 
             levelTextScript.progression = i;
-            levelTextScript.change = true;
+            levelTextScript.textOff = true;
         }
     }
 }
