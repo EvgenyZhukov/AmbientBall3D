@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class LevelTextScript : MonoBehaviour
 {
-    private float changeStep = 0.04f; // скорость исчезновения текста
+    private float changeStep = 0.02f; // скорость исчезновения текста
     public int progression; //получает из плеер префс
     public bool textOff = false; //получает из объекта сцены переключателя
     public bool getTextProgress = false;

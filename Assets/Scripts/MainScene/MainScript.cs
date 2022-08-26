@@ -59,6 +59,10 @@ public class MainScript : MonoBehaviour
     public TMP_Text starsNumber;
     public TMP_Text nextLevelsButtonToEpisode2;
     public TMP_Text deleteGame;
+    public TMP_Text textAmbient;
+    public TMP_Text textBall;
+    public TMP_Text textOptions;
+    public TMP_Text textStartGame;
     public Material mainText;
     private Color turquoise = new Color(0, 241, 255, 255);
     private float glowPower;
@@ -69,6 +73,8 @@ public class MainScript : MonoBehaviour
     public GameObject lineReturnInGame;
     public GameObject lineChangeLevel;
     public GameObject lineNoAds;
+    public GameObject lineAmbient;
+    public GameObject lineBall;
     public GameObject blocker;
     [Header("Настройки звука")]
     public AudioMixer MasterMixer;
@@ -99,6 +105,10 @@ public class MainScript : MonoBehaviour
     public GameObject needMoreStarsToEpisode2;
     public GameObject nextToEpisode2;
     public bool confirmDeleteGameProgress = false;
+    public bool gameNameVisible = false;
+    public bool startGameVisible = true;
+    private float textFadeSpeed = 0.02f;
+    public int starsForEpisode2 = 10;
 
     void Start()
     {
@@ -111,10 +121,12 @@ public class MainScript : MonoBehaviour
         
         OptionsLoader();
 
+        TextGameName();
     }
 
-    void Update()
+    void FixedUpdate()
     {
+        FadeGameName();
         MainNavigation();
         TextGlow();
     }
@@ -182,7 +194,10 @@ public class MainScript : MonoBehaviour
                 }
                 break;
             case 5:
-
+                //go to episode 2
+                break;
+            case 6:
+                //back to episode 1
                 break;
         }
     }
@@ -285,6 +300,75 @@ public class MainScript : MonoBehaviour
     {
         controlTypeText.text = leftHandedControl ? "LEFT-HANDED" : "RIGHT-HANDED";
     }
+    private void TextGameName()
+    {
+        if (!inProgress)
+        {
+            lineAmbient.SetActive(true);
+            lineBall.SetActive(true);
+
+            InvisibleText(textOptions);
+            InvisibleText(textStartGame);
+
+            StartCoroutine(LineTextChanger());
+        }
+    }
+    private IEnumerator LineTextChanger()
+    {
+        blocker.SetActive(true);
+        yield return new WaitForSeconds(2.5f);
+        gameNameVisible = true;
+        yield return new WaitForSeconds(1);
+        startGameVisible = false;
+        yield return new WaitForSeconds(0.5f);
+        blocker.SetActive(false);
+        yield break;
+    }
+    private void FadeGameName()
+    {
+        if (gameNameVisible)
+        {
+            FaderTextOff(textAmbient);
+            FaderTextOff(textBall);
+        }
+        if (!startGameVisible)
+        {
+            FaderTextOn(textOptions);
+            FaderTextOn(textStartGame);
+        }
+    }
+    public void FaderTextOn(TMP_Text textObj)
+    {
+        if (textObj.color.a < 1)
+        {
+            float aText = textObj.color.a;
+            aText += textFadeSpeed;
+            textObj.color = new Color(textObj.color.r, textObj.color.g, textObj.color.b, aText);
+        }
+        else
+        {
+            startGameVisible = true;
+        }
+    }
+    public void FaderTextOff(TMP_Text textObj)
+    {
+        if (textObj.color.a > 0)
+        {
+            float aText = textObj.color.a;
+            aText -= textFadeSpeed;
+            textObj.color = new Color(textObj.color.r, textObj.color.g, textObj.color.b, aText);
+        }
+        else if (textObj.color.a <= 0)
+        {
+            lineAmbient.SetActive(false);
+            lineBall.SetActive(false);
+            gameNameVisible = false;
+        }
+    }
+    private void InvisibleText(TMP_Text textObj)
+    {
+        textObj.color = new Color(textObj.color.r, textObj.color.g, textObj.color.b, 0);
+    }
     #endregion
 
     #region Кнопки навигиции по меню
@@ -293,6 +377,7 @@ public class MainScript : MonoBehaviour
     /// </summary>
     public void ButtonMainToLevels()
     {
+        clickSound.Play();
         pressedButton = 1;
         DisableButtons();
     }
@@ -301,6 +386,7 @@ public class MainScript : MonoBehaviour
     /// </summary>
     public void ButtonLevelsToMain()
     {
+        clickSound.Play();
         pressedButton = 2;
         DisableButtons();
     }
@@ -309,6 +395,7 @@ public class MainScript : MonoBehaviour
     /// </summary>
     public void ButtonMainToOptions()
     {
+        clickSound.Play();
         pressedButton = 3;
         DisableButtons();
     }
@@ -317,20 +404,42 @@ public class MainScript : MonoBehaviour
     /// </summary>
     public void ButtonOptionsToMain()
     {
+        clickSound.Play();
         pressedButton = 4;
         DisableButtons();
         OptionsSaver();
+    }
+    public void ButtonEpisode1ToEpisode2()
+    {
+        if (starsTotal >= starsForEpisode2 && SaveLoadData.GetLevelProgress() >= 9)
+        {
+            clickSound.Play();
+            pressedButton = 5;
+            DisableButtons();
+        }
+        else
+        {
+            errorSound.Play();
+        }
+    }
+    public void ButtonEpisode2ToEpisode1()
+    {
+            clickSound.Play();
+            pressedButton = 6;
+            DisableButtons();
     }
     /// <summary>
     /// Переход к покупке отключения рекламы
     /// </summary>
     public void ButtonNoAds()
     {
+        clickSound.Play();
         DisableButtons();
         /////////////////////////////////////////////////////no ads
     }
     public void ButtonDeleteGame()
     {
+        clickSound.Play();
         deleteGame.text = "really?";
 
         if (confirmDeleteGameProgress)
@@ -338,7 +447,7 @@ public class MainScript : MonoBehaviour
             PlayerPrefs.DeleteAll();
             saveGameScript.saving = true;
             Fade();
-            Invoke("StartLevel", lvlStartTime);
+            Invoke("ReloadMain", lvlStartTime);
         }
         confirmDeleteGameProgress = true;
     }
@@ -347,6 +456,7 @@ public class MainScript : MonoBehaviour
     /// </summary>
     public void ButtonReturnInGame()
     {
+        clickSound.Play();
         audioScript.fadeOut = true;
         pressedButton = 5;
         DisableButtons();
@@ -358,6 +468,7 @@ public class MainScript : MonoBehaviour
     #region Кнопки запуска уровней логика запуска уровней
     public void StartGame()
     {
+        clickSound.Play();
         levelSelected = true;
         DisableButtons();
         audioScript.fadeOut = true;
@@ -376,6 +487,10 @@ public class MainScript : MonoBehaviour
     {
         SceneManager.LoadScene(scene);
     }
+    public void ReloadMain()
+    {
+        SceneManager.LoadScene(0);
+    }
     private void Fade()
     {
         panelObj.SetActive(true);
@@ -389,7 +504,7 @@ public class MainScript : MonoBehaviour
         inProgressTemp = SaveLoadData.GetInProgressTemp();
         currentLvl = SaveLoadData.GetLevelProgress();
 
-        if (starsTotal >= 10 && SaveLoadData.GetLevelProgress() >= 9)
+        if (starsTotal >= starsForEpisode2 && SaveLoadData.GetLevelProgress() >= 9)
         {
             nextLevelsButtonToEpisode2.color = turquoise;
             needMoreStarsToEpisode2.SetActive(false);
@@ -555,12 +670,14 @@ public class MainScript : MonoBehaviour
 
     public void ButtonAccelerometer()
     {
+        clickSound.Play();
         accelerometerActive = !accelerometerActive;
         AccelerometerTextChange();
     }
 
     public void ButtonControl()
     {
+        clickSound.Play();
         leftHandedControl = !leftHandedControl;
         ControlTextChange();
     }

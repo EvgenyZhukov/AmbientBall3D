@@ -19,6 +19,8 @@ public class MainLvlButton : MonoBehaviour
     public GameObject star2;
     public GameObject star3;
     public int stars;
+    public AudioSource errorSound;
+    public AudioSource clickSound;
 
     void Start()
     {
@@ -62,12 +64,13 @@ public class MainLvlButton : MonoBehaviour
         {
             if (MainScript.currentLvl >= lvlNumber)
             {
+                clickSound.Play();
                 MainScript.scene = lvlNumber;
                 MainScript.StartGame();
             }
             else
             {
-                ////////////////////////////////////////////Error sound
+                errorSound.Play();
             }
         }
     }
