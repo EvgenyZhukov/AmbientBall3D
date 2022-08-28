@@ -60,6 +60,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 987750569019700023, guid: 6c657b24f5cc26f478a9f1d43df88938, type: 3}
+      propertyPath: m_Name
+      value: ArrowText (TMP)
+      objectReference: {fileID: 0}
+    - target: {fileID: 987750569019700023, guid: 6c657b24f5cc26f478a9f1d43df88938, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -124,3 +128,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   self: {fileID: 4019700914147536070}
+  levelTextScript: {fileID: 0}
+  arrowNumber: 0

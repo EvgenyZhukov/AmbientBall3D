@@ -14,7 +14,7 @@ public class LVL_02_TextScript : LevelTextScript
     public TMP_Text u;
     public TMP_Text m;
     public TMP_Text p;
-    public TMP_Text ar1, ar2, ar3, ar4, ar5, ar6, ar7, ar8, ar9, ar10;
+    public TMP_Text ar1, ar2, ar3, ar4, ar5, ar6;
 
     void Start()
     {
@@ -25,11 +25,11 @@ public class LVL_02_TextScript : LevelTextScript
     {
         if (textOnLaunch)
         {
-            if (j) FaderTextOn(j);
-            if (u) FaderTextOn(u);
-            if (m) FaderTextOn(m);
-            if (p) FaderTextOn(p);
-            if (ar1) FaderTextOn(ar1);
+            if (j.transform.parent.gameObject.activeSelf) FaderTextOn(j);
+            if (u.transform.parent.gameObject.activeSelf) FaderTextOn(u);
+            if (m.transform.parent.gameObject.activeSelf) FaderTextOn(m);
+            if (p.transform.parent.gameObject.activeSelf) FaderTextOn(p);
+            if (ar1.transform.parent.gameObject.activeSelf) FaderTextOn(ar1);
         }
 
         if (textOff)
@@ -40,42 +40,33 @@ public class LVL_02_TextScript : LevelTextScript
 
     private void TextLogicLevel_02()
     {
-        switch (progression)
+        if (progression >= 1)
         {
-            case 1:
-                FaderTextOff(j);
-                FaderTextOff(u);
-                FaderTextOff(m);
-                FaderTextOff(p);
-                FaderTextOff(ar1);
-                break;
-            case 2:
-                FaderTextOff(ar2);
-                break;
-            case 3:
-                FaderTextOff(ar3);
-                break;
-            case 4:
-                FaderTextOff(ar4);
-                break;
-            case 5:
-                FaderTextOff(ar5);
-                break;
-            case 6:
-                FaderTextOff(ar6);
-                break;
-            case 7:
-                FaderTextOff(ar7);
-                FaderTextOff(ar8);
-                break;
-            case 8:
-                FaderTextOff(ar9);
-                break;
-            case 9:
-                FaderTextOff(ar10);
-                break;
-            default:
-                break;
+            if (j.transform.parent.gameObject.activeSelf) FaderTextOff(j);
+            if (u.transform.parent.gameObject.activeSelf) FaderTextOff(u);
+            if (m.transform.parent.gameObject.activeSelf) FaderTextOff(m);
+            if (p.transform.parent.gameObject.activeSelf) FaderTextOff(p);
+            if (ar1.transform.parent.gameObject.activeSelf) FaderTextOff(ar1);
+        }
+        if (progression >= 2)
+        {
+            if (ar2.transform.parent.gameObject.activeSelf) FaderTextOff(ar2);
+        }
+        if (progression >= 3)
+        {
+            if (ar3.transform.parent.gameObject.activeSelf) FaderTextOff(ar3);
+        }
+        if (progression >= 4)
+        {
+            if (ar4.transform.parent.gameObject.activeSelf) FaderTextOff(ar4);
+        }
+        if (progression >= 5)
+        {
+            if (ar5.transform.parent.gameObject.activeSelf) FaderTextOff(ar5);
+        }
+        if (progression >= 6)
+        {
+            if (ar6.transform.parent.gameObject.activeSelf) FaderTextOff(ar6);
         }
     }
 }
