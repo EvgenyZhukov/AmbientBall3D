@@ -243,6 +243,42 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 118525389831433938, guid: 1ee9b3e8119fa214cad0aecfbd0f5722, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 36.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 118525389831433938, guid: 1ee9b3e8119fa214cad0aecfbd0f5722, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -21
+      objectReference: {fileID: 0}
+    - target: {fileID: 118525389831433938, guid: 1ee9b3e8119fa214cad0aecfbd0f5722, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -30.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2163228681422239389, guid: 1ee9b3e8119fa214cad0aecfbd0f5722, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -15.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2163228681422239389, guid: 1ee9b3e8119fa214cad0aecfbd0f5722, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -21
+      objectReference: {fileID: 0}
+    - target: {fileID: 2163228681422239389, guid: 1ee9b3e8119fa214cad0aecfbd0f5722, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -31.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2331912585835540768, guid: 1ee9b3e8119fa214cad0aecfbd0f5722, type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 340
+      objectReference: {fileID: 0}
+    - target: {fileID: 2331912585835540768, guid: 1ee9b3e8119fa214cad0aecfbd0f5722, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 340
+      objectReference: {fileID: 0}
+    - target: {fileID: 2331912585835540768, guid: 1ee9b3e8119fa214cad0aecfbd0f5722, type: 3}
+      propertyPath: InitialModule.startLifetime.minScalar
+      value: 340
+      objectReference: {fileID: 0}
     - target: {fileID: 4570964738358147233, guid: 1ee9b3e8119fa214cad0aecfbd0f5722, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -290,6 +326,18 @@ PrefabInstance:
     - target: {fileID: 4570964738358147234, guid: 1ee9b3e8119fa214cad0aecfbd0f5722, type: 3}
       propertyPath: m_Name
       value: LevelAmbientEffects LVL_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 4610803199780252015, guid: 1ee9b3e8119fa214cad0aecfbd0f5722, type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 340
+      objectReference: {fileID: 0}
+    - target: {fileID: 4610803199780252015, guid: 1ee9b3e8119fa214cad0aecfbd0f5722, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 340
+      objectReference: {fileID: 0}
+    - target: {fileID: 4610803199780252015, guid: 1ee9b3e8119fa214cad0aecfbd0f5722, type: 3}
+      propertyPath: InitialModule.startLifetime.minScalar
+      value: 340
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ee9b3e8119fa214cad0aecfbd0f5722, type: 3}

@@ -32,8 +32,8 @@ public class PlayerController : MonoBehaviour
     private float bigWeightMoveForce = 1000f;    // Сила движения, при высоком весе
     private float standartWeight = 1f;           // Масса игрока, стандарт
     private float bigWeight = 5f;                // Увеличенная масса игрока
-    private float standartJumpForce = 350f;      // Сила прыжка, стандарт
-    private float doubleJumpForce = 700f;        // Сила прыжка, увеличеная
+    private float standartJumpForce = 450f;      // Сила прыжка, стандарт
+    private float doubleJumpForce = 750f;        // Сила прыжка, увеличеная
     private float bigWeightJumpForce = 850f;     // Сила прыжка, при высоком весе
     private float moveForceInJump = 100f;        // Сила перемещения игрока в прыжке
     /// <summary>
