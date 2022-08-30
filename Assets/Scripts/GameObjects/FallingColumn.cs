@@ -8,14 +8,15 @@ public class FallingColumn : MonoBehaviour
     public GameObject plate;
     [SerializeField] private bool activated = false;
     private bool locker = false;
-    int minForce = 6;
-    int maxForce = 8;
+    int minForce = 4;
+    int maxForce = 6;
 
     void Start()
     {
         if (platform.GetComponent<Rigidbody>().velocity.y < -0.1)
         {
             activated = true;
+            platform.isKinematic = false;
         }
     }
 
@@ -28,6 +29,7 @@ public class FallingColumn : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             activated = true;
+            platform.isKinematic = false;
         }
     }
 

@@ -27,7 +27,11 @@ public class CollapsingColumn : MonoBehaviour
     {
         if (platform1.GetComponent<Rigidbody>().velocity.y < -0.1)
         {
-            activated = true;
+            activated = true; 
+            platform1.isKinematic = false;
+            platform2.isKinematic = false;
+            platform3.isKinematic = false;
+            platform4.isKinematic = false;
         }
     }
 
@@ -40,6 +44,10 @@ public class CollapsingColumn : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             activated = true;
+            platform1.isKinematic = false;
+            platform2.isKinematic = false;
+            platform3.isKinematic = false;
+            platform4.isKinematic = false;
         }
     }
 

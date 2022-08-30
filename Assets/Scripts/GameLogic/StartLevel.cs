@@ -9,10 +9,11 @@ public class StartLevel : MonoBehaviour
     public SaveGameScript saveGameScript;
 
     public GameObject startPoint;
-    public CameraController CameraController;
+    public CameraController cameraController;
 
-    void Start()
+    void Awake()
     {
+        cameraController = FindObjectOfType<CameraController>();
         saveLevelScript = FindObjectOfType<SaveLevelScript>();
         if (!SaveLoadData.GetInProgress())
         {
@@ -28,7 +29,7 @@ public class StartLevel : MonoBehaviour
             SaveLoadData.SetContinuousTaken(false);
             SaveLoadData.SetInProgress(true);
             SaveLoadData.SaveCoordinates(transform.position.x, transform.position.y, transform.position.z);
-            SaveLoadData.SaveCamAxisTemp(CameraController.X, CameraController.Y);
+            SaveLoadData.SaveCamAxisTemp(cameraController.X, cameraController.Y);
             saveLevelScript.saving = true;
             saveGameScript.saving = true;
             Invoke("Off", 0.1f);

@@ -15,6 +15,7 @@ public class LVL_01_TextScript : LevelTextScript
     public TMP_Text v;
     public TMP_Text e;
     public TMP_Text ar1, ar2, ar3, ar4, ar5, ar6, ar7, ar8, ar9, ar10;
+    public TMP_Text n, e2, x, t, l, e3, v2, e4, l2;
 
     void Start()
     {
@@ -80,6 +81,15 @@ public class LVL_01_TextScript : LevelTextScript
         if (progression >= 9)
         {
             if (ar10.transform.parent.gameObject.activeSelf) FaderTextOff(ar10);
+            if (n.transform.parent.gameObject.activeSelf) FaderTextOff(n);
+            if (e2.transform.parent.gameObject.activeSelf) FaderTextOff(e2);
+            if (x.transform.parent.gameObject.activeSelf) FaderTextOff(x);
+            if (t.transform.parent.gameObject.activeSelf) FaderTextOff(t);
+            if (l.transform.parent.gameObject.activeSelf) FaderTextOff(l);
+            if (e3.transform.parent.gameObject.activeSelf) FaderTextOff(e3);
+            if (v2.transform.parent.gameObject.activeSelf) FaderTextOff(v2);
+            if (e4.transform.parent.gameObject.activeSelf) FaderTextOff(e4);
+            if (l2.transform.parent.gameObject.activeSelf) FaderTextOff(l2);
         }
     }
 }

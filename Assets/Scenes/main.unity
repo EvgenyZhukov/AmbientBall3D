@@ -15,11 +15,11 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
   m_Fog: 1
-  m_FogColor: {r: 0.025681347, g: 0.18002322, b: 0.5, a: 1}
-  m_FogMode: 3
+  m_FogColor: {r: 0.019188304, g: 0.16199797, b: 0.46226418, a: 1}
+  m_FogMode: 1
   m_FogDensity: 0.052
-  m_LinearFogStart: 1
-  m_LinearFogEnd: 15
+  m_LinearFogStart: 10
+  m_LinearFogEnd: 30
   m_AmbientSkyColor: {r: 0.8235294, g: 0.8235294, b: 0.8235294, a: 1}
   m_AmbientEquatorColor: {r: 0.6627451, g: 0.6627451, b: 0.6627451, a: 1}
   m_AmbientGroundColor: {r: 0.05660379, g: 0.05660379, b: 0.05660379, a: 1}
@@ -11098,7 +11098,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.025681347, g: 0.18002322, b: 0.5, a: 1}
+  m_Color: {r: 0.019188304, g: 0.16199797, b: 0.46226418, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

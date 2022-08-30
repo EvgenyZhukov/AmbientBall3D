@@ -17,7 +17,7 @@ public class EndLevel : MonoBehaviour
     public GameObject endLevelEffect;
     private bool enter = false;
     private float moveToExitSpeed = 0.1f;
-    private float moveToExitAcceleration = 0.03f;
+    private float moveToExitAcceleration = 0.05f;
     private float scaleCangeSpeed = 0.1f;
     private float scaleCangeAcceleration = 0.02f;
     private bool locker = false;
@@ -33,7 +33,7 @@ public class EndLevel : MonoBehaviour
         z = player.transform.localScale.z;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         EnterInEndGamePortal();
     }
@@ -50,6 +50,9 @@ public class EndLevel : MonoBehaviour
             SaveLoadData.ResetCoordinates();    // Сбросы временных данных
             SaveLoadData.ResetLives();
             SaveLoadData.ResetTextProgress();
+            SaveLoadData.SetInProgress(false);
+            SaveLoadData.SetInProgressTemp(false);
+            SaveLoadData.SetFirstLevelLaunch(true);
 
             enter = true;   // активирует режим входа в портал
             player.GetComponent<Rigidbody>().useGravity = false; // выключает гравитацию для модели игрока

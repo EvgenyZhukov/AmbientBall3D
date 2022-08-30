@@ -7,7 +7,6 @@ public class CameraController : MonoBehaviour
 {
     [Header("Скрипты")]
     public GameScript GameScript;
-    //public PlayerController playerController;
     public ScriptUI scriptUI;
     [Header("Управление камерой")]
     public Transform target;         // Объект за которым осуществляется следование
@@ -64,6 +63,8 @@ public class CameraController : MonoBehaviour
         if (loading)
         {
             SaveLoadData.LoadCamAxisTemp(out tempX, out tempY);
+            Debug.Log(tempX);
+            Debug.Log(tempY);
 
             X = transform.localEulerAngles.y + tempX;
             Y = tempY;

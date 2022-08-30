@@ -263,6 +263,8 @@ public class ScriptUI : MonoBehaviour
     public void RestartGameButton()
     {
         Time.timeScale = 1f;
+        SaveLoadData.SetInProgressTemp(false);
+        SaveLoadData.SetInProgress(false);
         SaveLoadData.SetFirstLevelLaunch(true);
         SaveLoadData.ResetCoordinates();
         SaveLoadData.ResetTextProgress();

@@ -286,7 +286,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -280}
+  m_AnchoredPosition: {x: 0, y: -310}
   m_SizeDelta: {x: 1000, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7930050317821608310
@@ -945,7 +945,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 400, y: 200}
+  m_SizeDelta: {x: 650, y: 210}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2693823825166231333
 CanvasRenderer:
@@ -1002,15 +1002,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 75
-  m_fontSizeBase: 75
+  m_fontSize: 80
+  m_fontSizeBase: 80
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 16
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 512
+  m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -1266,7 +1266,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 50}
-  m_SizeDelta: {x: 300, y: 170}
+  m_SizeDelta: {x: 700, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7229264795817807867
 CanvasRenderer:
@@ -1601,7 +1601,7 @@ MonoBehaviour:
     zPos: 0
     maxLevel: 0
     inProgress: 0
-    stars: 000000000000000000000000000000000000000000000000000000000000000000000000
+    stars: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
     starsTotal: 0
   identifier: ambientBallSavedGameData
   saving: 0
@@ -12368,7 +12368,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 200}
+  m_AnchoredPosition: {x: 0, y: 230}
   m_SizeDelta: {x: 550, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6469689972717540606
@@ -13602,7 +13602,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.025681347, g: 0.18002322, b: 0.5, a: 1}
+  m_Color: {r: 0.019188304, g: 0.16199797, b: 0.46226418, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

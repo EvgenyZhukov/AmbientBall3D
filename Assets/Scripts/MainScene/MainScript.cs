@@ -30,7 +30,7 @@ public class MainScript : MonoBehaviour
     private float optionCamPosZ = -20;
     private float optionCamRotX = 90;
     //Фиксированные коэфициенты скорости перемещения камеры
-    private float camAccel = 4;
+    private float camAccel = 3;
     private float masterSpeedPosY = 2;
     private float lvlSpeedPosZ = 3.2f;
     private float optionSpeedPosZ = 4.5f;

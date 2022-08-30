@@ -7,7 +7,7 @@ public class MovedColumn : MonoBehaviour
 
     [SerializeField] private bool activated = false;
     [SerializeField] private bool pressed = false;
-    private float speed = 1f;               // Скорость нажатия кнопки
+    private float speed = 2f;               // Скорость нажатия кнопки
     private float timer = 0f;
     private float range = 2f;
     public GameObject column;
@@ -32,7 +32,7 @@ public class MovedColumn : MonoBehaviour
             transform.position -= new Vector3(0.0f, 0.5f * speed * Time.deltaTime, 0.0f);
             timer += 1f * Time.deltaTime;
         }
-        if (timer >= range*2)
+        if (timer >= range)
         {
             pressed = true;
         }

@@ -12,13 +12,14 @@ public class CheckPoint : MonoBehaviour
 
     public GameObject checkPoint;
     public ParticleSystem explode;
-    public CameraController CameraController;
+    public CameraController cameraController;
     bool locker = false;
 
-    void Start()
+    void Awake()
     {
         //levelTextScript = FindObjectOfType<LevelTextScript>();
         saveLevelScript = FindObjectOfType<SaveLevelScript>();
+        cameraController = FindObjectOfType<CameraController>();
     }
 
     void OnTriggerEnter(Collider other)
@@ -27,7 +28,7 @@ public class CheckPoint : MonoBehaviour
         {
             SaveLoadData.SetInProgress(true);
             SaveLoadData.SaveCoordinates(transform.position.x, transform.position.y, transform.position.z);
-            SaveLoadData.SaveCamAxisTemp(CameraController.X, CameraController.Y);
+            SaveLoadData.SaveCamAxisTemp(cameraController.X, cameraController.Y);
             saveLevelScript.saving = true;
             saveGameScript.saving = true;
             //levelTextScript.progression = SaveLoadData.GetTextProgress();
