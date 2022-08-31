@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float weight;             // Масса игрока, текущая
     [SerializeField] private float moveForce;          // Сила движения, текущая
     private float standartMoveForce = 500f;      // Сила движения, стандарт
-    private float doubleMoveForce = 800f;        // Увеличенная сила перемещения игрока
+    private float doubleMoveForce = 900f;        // Увеличенная сила перемещения игрока
     private float bigWeightMoveForce = 1000f;    // Сила движения, при высоком весе
     private float standartWeight = 1f;           // Масса игрока, стандарт
     private float bigWeight = 5f;                // Увеличенная масса игрока

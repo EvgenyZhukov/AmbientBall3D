@@ -4,24 +4,22 @@ using UnityEngine;
 
 public class CollapsingColumn : MonoBehaviour
 {
+    public GameObject column1;
+    public GameObject column2;
+    public GameObject column3;
+    public GameObject column4;
+
     public Rigidbody platform1;
     public Rigidbody platform2;
     public Rigidbody platform3;
     public Rigidbody platform4;
 
-    public GameObject plate1;
-    public GameObject plate2;
-    public GameObject plate3;
-    public GameObject plate4;
-
     [SerializeField] private bool activated = false;
     private bool locker = false;
     private float timer = 0f;        // Таймер
 
-    int minForce = 5;
-    int maxForce = 7;
-
-    float delta = 0.2f;
+    int minForce = 4;
+    int maxForce = 6;
 
     void Start()
     {
@@ -44,10 +42,6 @@ public class CollapsingColumn : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             activated = true;
-            platform1.isKinematic = false;
-            platform2.isKinematic = false;
-            platform3.isKinematic = false;
-            platform4.isKinematic = false;
         }
     }
 
@@ -60,33 +54,33 @@ public class CollapsingColumn : MonoBehaviour
             {
                 timer += 1f * Time.deltaTime;
             }
+            // Обрушение каскадов платформы по таймеру
+            if (timer >= 0.5)
+            {
+                platform1.isKinematic = false;
+            }
+            if (timer >= 1.5)
+            {
+                platform2.isKinematic = false;
+            }
+            if (timer >= 2.5)
+            {
+                platform3.isKinematic = false;
+            }
+            if (timer >= 3.0)
+            {
+                platform4.isKinematic = false;
+            }
             if (!locker)
             {
-                Invoke("PushForce_1", 0.5f);
-                Invoke("PushForce_2", 1.5f);
-                Invoke("PushForce_3", 2.5f);
-                Invoke("PushForce_4", 3.0f);
+                Invoke("PushForce_1", 0.51f);
+                Invoke("PushForce_2", 1.51f);
+                Invoke("PushForce_3", 2.51f);
+                Invoke("PushForce_4", 3.01f);
                 locker = true;
             }
-            // Обрушение каскадов платформы по таймеру
-            if (timer >= 0.5 + delta)
-            {
-                plate1.SetActive(false);
-            }
-            if (timer >= 1.5 + delta)
-            {
-                plate2.SetActive(false);
-            }
-            if (timer >= 2.5 + delta)
-            {
-                plate3.SetActive(false);
-            }
-            if (timer >= 3.0 + delta)
-            {
-                plate4.SetActive(false);
-            }
             // Отключение объекта
-            if (platform4.transform.position.y < -100)
+            if (gameObject.activeSelf && platform4.transform.position.y < -100)
             {
                 Invoke("SelfDestroy", 0f);
             }
@@ -98,36 +92,24 @@ public class CollapsingColumn : MonoBehaviour
     /// </summary>
     private void PushForce_1()
     {
-        //Vector3 forcePoint = transform.position;
-        //platform1.AddForceAtPosition(transform.forward * 1000 * Random.Range(minForce, maxForce), forcePoint);
-
-        platform1.AddForce(transform.forward * 1000 * Random.Range(minForce, maxForce));
+        Vector3 forcePoint = column1.transform.position;
+        platform1.AddForceAtPosition(transform.forward * 1000 * Random.Range(minForce, maxForce), forcePoint);
     }
-
     private void PushForce_2()
     {
-        //Vector3 forcePoint = transform.position;
-        //platform2.AddForceAtPosition(transform.right * 1000 * Random.Range(minForce, maxForce), forcePoint);
-
-        platform2.AddForce(transform.right * 1000 * Random.Range(minForce, maxForce));
+        Vector3 forcePoint = column2.transform.position;
+        platform2.AddForceAtPosition(transform.right * 1000 * Random.Range(minForce, maxForce), forcePoint);
     }
-
     private void PushForce_3()
     {
-        //Vector3 forcePoint = transform.position;
-        //platform3.AddForceAtPosition(transform.forward * 1000 * Random.Range(minForce, maxForce), forcePoint);
-
-        platform3.AddForce(transform.forward * 1000 * Random.Range(minForce, maxForce));
+        Vector3 forcePoint = column3.transform.position;
+        platform3.AddForceAtPosition(transform.forward * 1000 * Random.Range(minForce, maxForce), forcePoint);
     }
-
     private void PushForce_4()
     {
-        //Vector3 forcePoint = transform.position;
-        //platform4.AddForceAtPosition(-transform.right * 1000 * Random.Range(minForce, maxForce), forcePoint);
-
-        platform4.AddForce(-transform.right * 1000 * Random.Range(minForce, maxForce));
+        Vector3 forcePoint = column4.transform.position;
+        platform4.AddForceAtPosition(-transform.right * 500 * Random.Range(minForce, maxForce), forcePoint);
     }
-
     /// <summary>
     /// Метод самоуничтожения
     /// </summary>
