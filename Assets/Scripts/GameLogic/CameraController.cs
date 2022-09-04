@@ -11,13 +11,15 @@ public class CameraController : MonoBehaviour
     [Header("Управление камерой")]
     public Transform target;         // Объект за которым осуществляется следование
     public Vector3 offset;           // Разница расстояний между камерой и объектом наблюдения
-    private float sensitivity = 1f;   // Чувствительность джойстика
-    private float limitTop = 70f;     // Ограничение вращения по Y
+    private float sensitivity = 100f;   // Чувствительность джойстика
+    private float limitTop = 90f;     // Ограничение вращения по Y
     private float limitBottom = 40f;
     private float zoomCam = 13f;       // Значение зума камеры
     public float X, Y;              // Переменные осей вращения камеры
     public float tempX, tempY;
     public bool loading = false;
+    public LayerMask obstacles;
+    private RaycastHit hit;
 
     [SerializeField] private float camVertical;
     [SerializeField] private float camHorizontal;
@@ -37,6 +39,7 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
+        CamViewRay();
         CamControl();
         CamLoad();
     }
@@ -46,15 +49,22 @@ public class CameraController : MonoBehaviour
     /// </summary>
     private void CamControl()            
     {
-        camVertical = -scriptUI.JoystickCam.Vertical;          
-        camHorizontal = -scriptUI.JoystickCam.Horizontal;          
-        
-        // Вращение камеры джойстиком
-        X = transform.localEulerAngles.y + camHorizontal * sensitivity;
-        Y += camVertical * sensitivity;
-        
+        camVertical = -scriptUI.JoystickCam.Vertical;
+        camHorizontal = -scriptUI.JoystickCam.Horizontal;
 
+        // Вращение камеры джойстиком
+        if (hit.collider != null)
+        {
+            X = transform.localEulerAngles.y;
+            Y -= 100f * Time.deltaTime;
+        }
+        else
+        {
+            X = transform.localEulerAngles.y + camHorizontal * sensitivity * Time.deltaTime;
+            Y += camVertical * sensitivity * Time.deltaTime;
+        }
         Y = Mathf.Clamp(Y, -limitTop, -limitBottom);     // Ограничение угла обзора
+
         transform.localEulerAngles = new Vector3(-Y, X, 0);
         transform.position = transform.localRotation * offset + target.position;
     }
@@ -63,8 +73,8 @@ public class CameraController : MonoBehaviour
         if (loading)
         {
             SaveLoadData.LoadCamAxisTemp(out tempX, out tempY);
-            Debug.Log(tempX);
-            Debug.Log(tempY);
+            //Debug.Log(tempX);
+            //Debug.Log(tempY);
 
             X = transform.localEulerAngles.y + tempX;
             Y = tempY;
@@ -82,5 +92,14 @@ public class CameraController : MonoBehaviour
     {
         offset = new Vector3(offset.x, offset.y, -zoomCam);
         transform.position = target.position + offset;
+    }
+
+    private void CamViewRay()
+    {
+        Ray ray = new Ray(transform.position, target.position - transform.position);
+        Physics.Raycast(ray, out hit, zoomCam, obstacles);
+
+        //Debug.DrawLine(ray.origin, hit.point, Color.red);
+        //Debug.Log(hit.collider);
     }
 }

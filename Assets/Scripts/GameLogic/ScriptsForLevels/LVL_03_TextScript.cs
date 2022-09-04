@@ -61,13 +61,7 @@ public class LVL_03_TextScript : LevelTextScript
             if (v.transform.parent.gameObject.activeSelf) FaderTextOff(v);
             if (e.transform.parent.gameObject.activeSelf) FaderTextOff(e);
             if (ar1.transform.parent.gameObject.activeSelf) FaderTextOff(ar1);
-        }
-        if (progression >= 2)
-        {
             if (ar2.transform.parent.gameObject.activeSelf) FaderTextOff(ar2);
-        }
-        if (progression >= 3)
-        {
             if (ar3.transform.parent.gameObject.activeSelf) FaderTextOff(ar3);
         }
     }

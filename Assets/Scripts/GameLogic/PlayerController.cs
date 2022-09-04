@@ -57,9 +57,11 @@ public class PlayerController : MonoBehaviour
     private float x; // Масштаб объекта линии для изменения ее ширины
     private float formSpeed = 3f; //Скорость изменения размера линии
     public bool magniteForm = false;
+    public int sceneNumber;
 
     void Start ()
     {
+        sceneNumber = SceneManager.GetActiveScene().buildIndex;
         PropertiesStart();
     }
     void Update()
@@ -164,40 +166,35 @@ public class PlayerController : MonoBehaviour
                 case 0:
                     moveForce = standartMoveForce;
                     jumpForce = standartJumpForce;
-                    weight = standartWeight;
-                    ChangeMass();
+                    ChangeMass(standartWeight);
                     magniteForm = false;
                     propertiesChangeIteration = false;
                     break;
                 case 1:
                     moveForce = doubleMoveForce;
                     jumpForce = standartJumpForce;
-                    weight = standartWeight;
-                    ChangeMass();
+                    ChangeMass(standartWeight);
                     magniteForm = false;
                     propertiesChangeIteration = false;
                     break;
                 case 2:
                     moveForce = standartMoveForce;
                     jumpForce = doubleJumpForce;
-                    weight = standartWeight;
-                    ChangeMass();
+                    ChangeMass(standartWeight);
                     magniteForm = false;
                     propertiesChangeIteration = false;
                     break;
                 case 3:
                     moveForce = bigWeightMoveForce;
                     jumpForce = bigWeightJumpForce;
-                    weight = bigWeight;
-                    ChangeMass();
+                    ChangeMass(bigWeight);
                     magniteForm = false;
                     propertiesChangeIteration = false;
                     break;
                 case 4:
                     moveForce = standartMoveForce;
                     jumpForce = standartJumpForce;
-                    weight = standartWeight;
-                    ChangeMass();
+                    ChangeMass(standartWeight);
                     magniteForm = true;
                     propertiesChangeIteration = false;
                     break;
@@ -207,7 +204,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Присваивает телу игрока массу согласно текущим свойствам
     /// </summary>
-    private void ChangeMass()
+    private void ChangeMass(float weight)
     {
         playerRb.GetComponent<Rigidbody>().mass = weight;
     }
@@ -216,15 +213,27 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void PropertiesStart()
     {
-        line1.GetComponent<MeshRenderer>().material = ballMaterialWhite;
-        line2.GetComponent<MeshRenderer>().material = ballMaterialWhite;
-        line3.GetComponent<MeshRenderer>().material = ballMaterialWhite;
-
-        playerForm = 0;
-        jumpForce = standartJumpForce;
-        moveForce = doubleMoveForce;
-        weight = standartWeight;
-        ChangeMass();
+        switch (sceneNumber)
+        {
+            case 3:
+                line1.GetComponent<MeshRenderer>().material = ballMaterialRed;
+                line2.GetComponent<MeshRenderer>().material = ballMaterialRed;
+                line3.GetComponent<MeshRenderer>().material = ballMaterialRed;
+                playerForm = 1;
+                jumpForce = standartJumpForce;
+                moveForce = doubleMoveForce;
+                ChangeMass(standartWeight);
+                break;
+            default:
+                line1.GetComponent<MeshRenderer>().material = ballMaterialWhite;
+                line2.GetComponent<MeshRenderer>().material = ballMaterialWhite;
+                line3.GetComponent<MeshRenderer>().material = ballMaterialWhite;
+                playerForm = 0;
+                jumpForce = standartJumpForce;
+                moveForce = standartMoveForce;
+                ChangeMass(standartWeight);
+                break;
+        }
     }
     #endregion
 
@@ -302,8 +311,6 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void ChangePropertiesButton()
     {
-        int sceneNumber = SceneManager.GetActiveScene().buildIndex;
-
         if (sceneNumber >= 7)
         {
             if (playerForm < 4)
