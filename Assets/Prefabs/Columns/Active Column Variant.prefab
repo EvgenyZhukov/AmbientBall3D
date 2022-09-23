@@ -11,6 +11,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Active Column Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 2474864565745445838, guid: bc37661249c2b0945ad315120ee894e6, type: 3}
+      propertyPath: m_Size.y
+      value: 0.002
+      objectReference: {fileID: 0}
+    - target: {fileID: 2474864565745445838, guid: bc37661249c2b0945ad315120ee894e6, type: 3}
+      propertyPath: m_Center.y
+      value: 0.001
+      objectReference: {fileID: 0}
     - target: {fileID: 4835007912274784222, guid: bc37661249c2b0945ad315120ee894e6, type: 3}
       propertyPath: m_RootOrder
       value: 0

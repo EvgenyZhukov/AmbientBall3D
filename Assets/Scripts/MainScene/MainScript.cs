@@ -108,7 +108,7 @@ public class MainScript : MonoBehaviour
     public bool gameNameVisible = false;
     public bool startGameVisible = true;
     private float textFadeSpeed = 0.02f;
-    public int starsForEpisode2 = 10;
+    public int starsForEpisode2 = 15;
 
     void Start()
     {
