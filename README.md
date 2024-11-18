@@ -71,6 +71,21 @@ Ambient Ball 3D is an exciting 3D arcade game with a minimalist design and atmos
 
 ---
 
+## 📜 License
+This work is licensed under a [Creative Commons Attribution-NonCommercial-NoDerivs 4.0 International License](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+You are free to:
+- Share — copy and redistribute the material in any medium or format
+
+Under the following terms:
+- **Attribution:** Credit must be given to the creator.
+- **NonCommercial:** The material cannot be used for commercial purposes.
+- **NoDerivatives:** You cannot modify or distribute modified versions of the material.
+
+For more information, see the full license text in the [LICENSE](./LICENSE) file.
+
+---
+
 ## 📞 Contact
 - **Developer:** SaveLoadGames
 - **Email:** [e.e.zhukov@mail.ru](mailto:e.e.zhukov@mail.ru)
