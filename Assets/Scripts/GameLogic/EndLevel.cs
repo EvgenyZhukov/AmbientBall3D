@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using PlayerPrefsSavingMethods;
@@ -9,7 +8,7 @@ public class EndLevel : MonoBehaviour
     [Header("Скрипты")]
     public SaveGameScript saveGameScript;
     public ScriptUI scriptUI;
-    public Fader faderMainScript;
+    public FaderNew faderMainScript;
     public GameScript gameScript;
     public bool active = false;
     public GameObject player;
@@ -18,26 +17,24 @@ public class EndLevel : MonoBehaviour
     private bool enter = false;
     private float moveToExitSpeed = 0.1f;
     private float moveToExitAcceleration = 0.05f;
-    private float scaleCangeSpeed = 0.1f;
-    private float scaleCangeAcceleration = 0.02f;
     private bool locker = false;
-    private float x, y, z;
     private int stars = 0;
     private float starDelay = 0.5f;
     private float winScreenDelay = 0.5f;
+    private float playerScale = 1;
+    public AudioSource starShowSound;
+    public AudioSource endLevel;
+    private TextVisibilityManager textVisibilityManager;
 
-    void Start()
+    private void Start()
     {
-        x = player.transform.localScale.x;
-        y = player.transform.localScale.y;
-        z = player.transform.localScale.z;
-    }
+        textVisibilityManager = FindObjectOfType<TextVisibilityManager>();
 
+    }
     void FixedUpdate()
     {
         EnterInEndGamePortal();
     }
-
     /// <summary>
     /// Переход на новый уровень
     /// </summary>
@@ -50,13 +47,17 @@ public class EndLevel : MonoBehaviour
             SaveLoadData.ResetCoordinates();    // Сбросы временных данных
             SaveLoadData.ResetLives();
             SaveLoadData.ResetTextProgress();
+            SaveLoadData.ResetStarsScoreTemp();
+            SaveLoadData.ResetStarsScore(SceneManager.GetActiveScene().buildIndex + 1);
             SaveLoadData.SetInProgress(false);
             SaveLoadData.SetInProgressTemp(false);
             SaveLoadData.SetFirstLevelLaunch(true);
+            SaveLoadData.DelCamAxisTemp();
+
+            scriptUI.DeactivateUI();
 
             enter = true;   // активирует режим входа в портал
             player.GetComponent<Rigidbody>().useGravity = false; // выключает гравитацию для модели игрока
-
 
             active = true;  // блокировщик повтора метода
         }
@@ -68,21 +69,21 @@ public class EndLevel : MonoBehaviour
     {
         if (enter)
         {
-            moveToExitSpeed += moveToExitAcceleration;
-            float step = moveToExitSpeed * Time.deltaTime;
-            player.transform.position = Vector3.MoveTowards(player.transform.position, transform.position, step);
-
-            if (x > 0)
+            playerScale = Vector3.Distance(player.transform.position, transform.position);
+            if (playerScale > 1)
             {
-                x -= scaleCangeSpeed * Time.deltaTime;
-                y -= scaleCangeSpeed * Time.deltaTime;
-                z -= scaleCangeSpeed * Time.deltaTime;
-                player.transform.localScale = new Vector3(x, y, z);
-                scaleCangeSpeed += scaleCangeAcceleration;
+                playerScale = 1;
             }
 
+            moveToExitSpeed += moveToExitAcceleration;
+            float step = moveToExitSpeed;
+            player.transform.position = Vector3.MoveTowards(player.transform.position, transform.position, step * Time.deltaTime);
+
+            player.transform.localScale = new Vector3(playerScale, playerScale, playerScale);
+            
             if (player.transform.position == transform.position && !locker)
             {
+                endLevel.Play();
                 Instantiate(explosion, player.transform.position, Quaternion.identity);  // Воспроизводит эффект перехода на следующий уровень
                 endLevelEffect.SetActive(false);
                 player.gameObject.SetActive(false); // Выключает модель игрока
@@ -111,22 +112,29 @@ public class EndLevel : MonoBehaviour
         }
         SaveLoadData.SetScene(gameScript.scene);       // Записывает номер запускаемой сцены следующего уровня
 
-        if (SaveLoadData.GetContinuousTaken())
+        switch (gameScript.starsScore)
         {
-            stars = 1;
-        }
-        else
-        {
-            if (gameScript.lives < 2)
-            {
+            case 0:
+                stars = 0;
+                break;
+            case 1:
+                stars = 1;
+                break;
+            case 2:
                 stars = 2;
-            }
-            else if (gameScript.lives >= 2)
-            {
+                break;
+            case 3:
                 stars = 3;
-            }
+                break;
+            default:
+                stars = gameScript.starsScore;
+                break;
         }
-        SaveLoadData.SetStars(SceneManager.GetActiveScene().buildIndex, stars); // сохранение количества звезд пройденого уровня
+
+        if (SaveLoadData.GetStars(SceneManager.GetActiveScene().buildIndex) < stars)
+        {
+            SaveLoadData.SetStars(SceneManager.GetActiveScene().buildIndex, stars); // сохранение количества звезд пройденого уровня
+        }
 
         saveGameScript.saving = true;   // сохранение игры в файл
     }
@@ -138,26 +146,35 @@ public class EndLevel : MonoBehaviour
     {
         switch (stars)
         {
+            case 0:
+                scriptUI.gameFinished.text = "level finished! \n no stars \n were collected.";
+                yield break;
             case 1:
                 scriptUI.gameFinished.text = "level finished! \n not bad! \n 1 star!";
                 yield return new WaitForSeconds(starDelay);
                 scriptUI.star1.gameObject.SetActive(true);
+                StarSound();
                 yield break;
             case 2:
                 scriptUI.gameFinished.text = "level finished! \n good! \n 2 stars!";
                 yield return new WaitForSeconds(starDelay);
                 scriptUI.star1.gameObject.SetActive(true);
+                StarSound();
                 yield return new WaitForSeconds(starDelay);
                 scriptUI.star2.gameObject.SetActive(true);
+                StarSound();
                 yield break;
             case 3:
-                scriptUI.gameFinished.text = "level finished! \n great! \n 3 stars!";
+                scriptUI.gameFinished.text = "level finished! \n great! \n all 3 stars!";
                 yield return new WaitForSeconds(starDelay);
                 scriptUI.star1.gameObject.SetActive(true);
+                StarSound();
                 yield return new WaitForSeconds(starDelay);
                 scriptUI.star2.gameObject.SetActive(true);
+                StarSound();
                 yield return new WaitForSeconds(starDelay);
                 scriptUI.star3.gameObject.SetActive(true);
+                StarSound();
                 yield break;
             default:
                 break;
@@ -168,11 +185,19 @@ public class EndLevel : MonoBehaviour
     /// </summary>
     void WinGameScreen()
     {
+        textVisibilityManager.HideTextObjects();
         scriptUI.gameFinished.transform.gameObject.SetActive(true);  // включение текста
         scriptUI.startNextLevelText.transform.parent.gameObject.SetActive(true);
         scriptUI.endLevelTextOn = true;
 
         scriptUI.panelObjFader.SetActive(true);
         faderMainScript.fadingAlmost = true;
+
+        scriptUI.FaderSemiHide();
+    }
+    void StarSound()
+    {
+        starShowSound.Play();///звук появления звезды
+        starShowSound.pitch += 0.3f;
     }
 }

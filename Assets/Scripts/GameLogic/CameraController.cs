@@ -1,25 +1,28 @@
 using PlayerPrefsSavingMethods;
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [Header("Скрипты")]
+    [Header("РЎРєСЂРёРїС‚С‹")]
     public GameScript GameScript;
     public ScriptUI scriptUI;
-    [Header("Управление камерой")]
-    public Transform target;         // Объект за которым осуществляется следование
-    public Vector3 offset;           // Разница расстояний между камерой и объектом наблюдения
-    private float sensitivity = 100f;   // Чувствительность джойстика
-    private float limitTop = 90f;     // Ограничение вращения по Y
-    private float limitBottom = 40f;
-    private float zoomCam = 13f;       // Значение зума камеры
-    public float X, Y;              // Переменные осей вращения камеры
+    [Header("РЈРїСЂР°РІР»РµРЅРёРµ РєР°РјРµСЂРѕР№")]
+    public Transform target;         // РћР±СЉРµРєС‚ Р·Р° РєРѕС‚РѕСЂС‹Рј РѕСЃСѓС‰РµСЃС‚РІР»СЏРµС‚СЃСЏ СЃР»РµРґРѕРІР°РЅРёРµ
+    public Vector3 offset;           // Р Р°Р·РЅРёС†Р° СЂР°СЃСЃС‚РѕСЏРЅРёР№ РјРµР¶РґСѓ РєР°РјРµСЂРѕР№ Рё РѕР±СЉРµРєС‚РѕРј РЅР°Р±Р»СЋРґРµРЅРёСЏ
+    private float sensitivity = 100f;   // Р§СѓРІСЃС‚РІРёС‚РµР»СЊРЅРѕСЃС‚СЊ РґР¶РѕР№СЃС‚РёРєР°
+    private float limitTop = 90f;     // РћРіСЂР°РЅРёС‡РµРЅРёРµ РІСЂР°С‰РµРЅРёСЏ РїРѕ Y
+    private float limitBottom = 45f;
+    private float zoomCam = 13f;       // Р—РЅР°С‡РµРЅРёРµ Р·СѓРјР° РєР°РјРµСЂС‹
+    public float X, Y;              // РџРµСЂРµРјРµРЅРЅС‹Рµ РѕСЃРµР№ РІСЂР°С‰РµРЅРёСЏ РєР°РјРµСЂС‹
     public float tempX, tempY;
     public bool loading = false;
     public LayerMask obstacles;
     private RaycastHit hit;
+    bool camMoved;
+
+    float standartRangeCulling = 25f;
+    public Camera cameraFirst;
 
     [SerializeField] private float camVertical;
     [SerializeField] private float camHorizontal;
@@ -31,42 +34,53 @@ public class CameraController : MonoBehaviour
             loading = true;
         }
     }
-
     void Start()
     {
         CamStart();
+        ClippingDistance();
     }
-
     void Update()
     {
         CamViewRay();
         CamControl();
         CamLoad();
+        //Debug.Log("layerCullDistances: " + string.Join(", ", cameraFirst.layerCullDistances));
     }
-
     /// <summary>
-    /// Управление камерой
+    /// РЈРїСЂР°РІР»РµРЅРёРµ РєР°РјРµСЂРѕР№
     /// </summary>
     private void CamControl()            
     {
-        camVertical = -scriptUI.JoystickCam.Vertical;
-        camHorizontal = -scriptUI.JoystickCam.Horizontal;
+            camVertical = -scriptUI.JoystickCam.Vertical;
+            camHorizontal = -scriptUI.JoystickCam.Horizontal;
 
-        // Вращение камеры джойстиком
-        if (hit.collider != null)
-        {
-            X = transform.localEulerAngles.y;
-            Y -= 100f * Time.deltaTime;
-        }
-        else
-        {
-            X = transform.localEulerAngles.y + camHorizontal * sensitivity * Time.deltaTime;
-            Y += camVertical * sensitivity * Time.deltaTime;
-        }
-        Y = Mathf.Clamp(Y, -limitTop, -limitBottom);     // Ограничение угла обзора
+            // Р’СЂР°С‰РµРЅРёРµ РєР°РјРµСЂС‹ РґР¶РѕР№СЃС‚РёРєРѕРј
+            if (hit.collider != null)
+            {
+                X = transform.localEulerAngles.y;
+                Y -= 50f * Time.deltaTime;
+            }
+            else
+            {
+                X = transform.localEulerAngles.y + camHorizontal * sensitivity * Time.deltaTime;
+                Y += camVertical * sensitivity * Time.deltaTime;
+            }
+            Y = Mathf.Clamp(Y, -limitTop, -limitBottom);     // РћРіСЂР°РЅРёС‡РµРЅРёРµ СѓРіР»Р° РѕР±Р·РѕСЂР°
 
-        transform.localEulerAngles = new Vector3(-Y, X, 0);
-        transform.position = transform.localRotation * offset + target.position;
+            transform.localEulerAngles = new Vector3(-Y, X, 0);
+            transform.position = transform.localRotation * offset + target.position;
+
+            if (camVertical != 0 || camHorizontal != 0)
+            {
+                camMoved = true;
+            }
+
+            if (camMoved)
+            {
+                SaveLoadData.SaveCamAxisTemp(X, Y);
+                camMoved = false;
+            }
+        
     }
     private void CamLoad()
     {
@@ -86,14 +100,13 @@ public class CameraController : MonoBehaviour
         }
     }
     /// <summary>
-    /// Выставляет стартовую позицию камеры с учетом положения объекта наблюдения и зума
+    /// Р’С‹СЃС‚Р°РІР»СЏРµС‚ СЃС‚Р°СЂС‚РѕРІСѓСЋ РїРѕР·РёС†РёСЋ РєР°РјРµСЂС‹ СЃ СѓС‡РµС‚РѕРј РїРѕР»РѕР¶РµРЅРёСЏ РѕР±СЉРµРєС‚Р° РЅР°Р±Р»СЋРґРµРЅРёСЏ Рё Р·СѓРјР°
     /// </summary>
     private void CamStart()
     {
         offset = new Vector3(offset.x, offset.y, -zoomCam);
         transform.position = target.position + offset;
     }
-
     private void CamViewRay()
     {
         Ray ray = new Ray(transform.position, target.position - transform.position);
@@ -101,5 +114,19 @@ public class CameraController : MonoBehaviour
 
         //Debug.DrawLine(ray.origin, hit.point, Color.red);
         //Debug.Log(hit.collider);
+    }
+    private void ClippingDistance()
+    {
+        float[] distances = new float[32];
+        distances[0] = standartRangeCulling;
+        distances[1] = standartRangeCulling;
+        distances[2] = standartRangeCulling;
+        distances[3] = standartRangeCulling;
+        distances[4] = standartRangeCulling;
+        distances[5] = standartRangeCulling;
+        distances[6] = standartRangeCulling;
+        distances[7] = 100f;
+        cameraFirst.layerCullDistances = distances;
+        //Debug.Log("layerCullDistances: " + string.Join(", ", distances));
     }
 }

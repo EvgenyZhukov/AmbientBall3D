@@ -1,39 +1,77 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using PlayerPrefsSavingMethods;
+using UnityEngine.SceneManagement;
 
 public class CheckPoint : MonoBehaviour
 {
+    [Header("Скрипты")]
     public SaveLevelScript saveLevelScript;
     public SaveGameScript saveGameScript;
     public ScriptUI scriptUI;
-    //public LevelTextScript levelTextScript;
+    //public CameraController cameraController;
+    public GameScript gameScript;
+    //public PlayerController playerController;
 
-    public GameObject checkPoint;
+    [Header("Объекты")]
+    //public GameObject checkPoint;
     public ParticleSystem explode;
-    public CameraController cameraController;
     bool locker = false;
+    public GameObject activator;
+    public AudioSource checkPointSound;
+    public GameObject checkPointEffectSystem;
+    public BoxCollider trigger;
+    private Vector3 triggerStandartSize;
+    private Vector3 triggerBigSize = new Vector3(10f, 10f, 10f);
+    private bool bigSizeTriggerForm = false;
 
     void Awake()
     {
-        //levelTextScript = FindObjectOfType<LevelTextScript>();
         saveLevelScript = FindObjectOfType<SaveLevelScript>();
-        cameraController = FindObjectOfType<CameraController>();
+        saveGameScript = FindObjectOfType<SaveGameScript>();
+        scriptUI = FindObjectOfType<ScriptUI>();
+        //cameraController = FindObjectOfType<CameraController>();
+        gameScript = FindObjectOfType<GameScript>();
+        //playerController = FindObjectOfType<PlayerController>();
+        triggerStandartSize = trigger.size;
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && !locker)
         {
-            SaveLoadData.SetInProgress(true);
-            SaveLoadData.SaveCoordinates(transform.position.x, transform.position.y, transform.position.z);
-            SaveLoadData.SaveCamAxisTemp(cameraController.X, cameraController.Y);
-            saveLevelScript.saving = true;
-            saveGameScript.saving = true;
-            //levelTextScript.progression = SaveLoadData.GetTextProgress();
+            SaveLoadData.SetStarsScore(SceneManager.GetActiveScene().buildIndex, gameScript.starsScore);
 
-            Invoke("ChangeCheckPointText", 1.6f);
+            if (activator.activeSelf)
+            {
+                activator.SetActive(false);
+                checkPointSound.Play();
+                scriptUI.gameSaved.text = "game saved...";
+                //SaveLoadData.SaveCamAxisTemp(cameraController.X, cameraController.Y);
+                SaveLoadData.SetInProgress(true);
+                SaveLoadData.SaveCoordinates(transform.position.x, transform.position.y, transform.position.z);
+                //Debug.Log(cameraController.X);
+                //Debug.Log(cameraController.Y);
+                //SaveLoadData.SetPropertiesFormNum(playerController.playerForm);
+                saveLevelScript.saving = true;
+                Invoke("SaveGame", 0.2f);
+            }
+            else
+            {
+                if (scriptUI.checkPointTextHider)
+                {
+                    scriptUI.checkPointTextHider = false;
+                    scriptUI.gameSaved.text = " ";
+                }
+                else
+                {
+                    scriptUI.gameSaved.text = "game loaded...";
+                }
+                //saveLevelScript.saving = true;
+                saveGameScript.saving = true;
+                checkPointEffectSystem.SetActive(false);
+            }
+
+            //levelTextScript.progression = SaveLoadData.GetTextProgress();
 
             Invoke("Effect", 0.0f);
             Invoke("Off", 3f);
@@ -41,6 +79,9 @@ public class CheckPoint : MonoBehaviour
             scriptUI.gameSaved.transform.gameObject.SetActive(true);
             scriptUI.checkPointTextOn = true;
             locker = true;
+
+            trigger.size = triggerBigSize;
+            bigSizeTriggerForm = true;
         }
     }
     /// <summary>
@@ -58,11 +99,33 @@ public class CheckPoint : MonoBehaviour
     /// </summary>
     void Off()
     {
-        checkPoint.SetActive(false);
+        checkPointEffectSystem.SetActive(false);
     }
-    void ChangeCheckPointText()
+    private void OnTriggerExit(Collider other)
     {
-        scriptUI.gameSaved.text = "game saved...";
-        SaveLoadData.SetCheckpoitTextSaving(true);
+        if (other.CompareTag("Player") && bigSizeTriggerForm)
+        {
+            RestoreCheckPoint();
+        }
+    }
+    void RestoreCheckPoint()
+    {
+        activator.SetActive(true);
+        locker = false;
+        trigger.size = triggerStandartSize;
+        bigSizeTriggerForm = false;
+        Invoke("On", 3f);
+    }
+    void On()
+    {
+        checkPointEffectSystem.SetActive(true);
+        var stars = explode.main;
+        var force = explode.forceOverLifetime;
+        stars.loop = true;
+        force.enabled = false;
+    }
+    void SaveGame()
+    {
+        saveGameScript.saving = true;
     }
 }

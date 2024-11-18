@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -11,17 +9,24 @@ public class ScriptUI : MonoBehaviour
     [Header("Скрипты")]
     public GameScript GameScript;
     public PlayerController playerConroller;
-    public Fader faderMainScript;
+    public FaderNew faderMainScript;
     public FixedJoystick JoystickCam;
     public FixedJoystick JoystickMove;
     public SaveLevelScript saveLevelScript;
+    public SaveGameScript saveGameScript;
     public CameraController cameraController;
     public LevelTextScript levelTextScript;
+    public AudioScript audioScript;
+    public InterstitialAd interstitialAd;
+    public TextVisibilityManager textVisibilityManager;
     [Header("Объекты")]
     public GameObject live1;
+    public GameObject starUI;
     public GameObject panelObjFader;
     public TMP_Text livesNumber;
+    public TMP_Text starsNumber;
     public GameObject pauseCanvas;
+    public GameObject continuousCanvas;
     public ParticleSystem particalStar1;
     public ParticleSystem particalStar2;
     public ParticleSystem particalStar3;
@@ -47,6 +52,8 @@ public class ScriptUI : MonoBehaviour
     public RectTransform rightBottonRT;
     public RectTransform leftBottonRT;
 
+    public RectTransform rectTransformFaderPanel;
+
     public Button jumpButton;
     public Button transformButton;
 
@@ -64,6 +71,8 @@ public class ScriptUI : MonoBehaviour
     public GameObject star3;
 
     public GameObject defeatCanvas;
+    public GameObject loadingCanvas;
+    public GameObject tryWatchAdCanvas;
     [Header("UI")]
     public float screenChangeTime = 1.2f;
     public float changeStep = 0.04f;
@@ -74,12 +83,25 @@ public class ScriptUI : MonoBehaviour
     public bool accelerometerActive = false;
     public bool leftHandedControl = false;
     public bool offTextAfterNextLevelButton = false;
-    bool levelLaunchCheck = false;
+    public bool accelerometerLocker = false;
+    public bool checkPointTextHider = false;
+    public bool playerAddForceLocker = false;
+    private int previousStarsScore = -1;
+    [Header("FPS")]
+    public Text fps;
+    public float updateInterval = 0.5f; // Интервал обновления FPS
+    private float accum = 0; // Накопленная сумма FPS
+    private int frames = 0; // Количество кадров
+    private float timeleft; // Оставшееся время до обновления
 
     void Start()
     {
         saveLevelScript = FindObjectOfType<SaveLevelScript>();
         levelTextScript = FindObjectOfType<LevelTextScript>();
+        saveGameScript = FindObjectOfType<SaveGameScript>();
+        textVisibilityManager = FindObjectOfType<TextVisibilityManager>();
+
+        FaderFullHide();
 
         SetControl();
         SettingUI();
@@ -89,14 +111,23 @@ public class ScriptUI : MonoBehaviour
         LivesUI();
 
         FirstPause();
+
+        //Debug.Log("accelerometerActive = " + accelerometerActive);
+        //Debug.Log("accelerometerLocker = " + accelerometerLocker);
     }
 
     void FixedUpdate()
     {
         LivesAnimator();
+        StarsUI();
 
         FaderPauseText();
         FaderPopupText();
+    }
+
+    void Update()
+    {
+        //FPSmeter();
     }
 
     /// <summary>
@@ -104,10 +135,16 @@ public class ScriptUI : MonoBehaviour
     /// </summary>
     public void MainButton()
     {
+        PlayClickSound();
         saveLevelScript.saving = true;      ////////////////////////////Сохранение уровня
         DeactivateUI();
         panelObjFader.SetActive(true);
         faderMainScript.fading = true;
+
+        FaderFullHide();
+
+        audioScript.FadeOut();
+
         Invoke("GoToMain", screenChangeTime);
     }
     /// <summary>
@@ -118,7 +155,11 @@ public class ScriptUI : MonoBehaviour
         SaveLoadData.SetInProgressTemp(true);
         SaveLoadData.SaveCoordinatesTemp(GameScript.player.transform.position.x, GameScript.player.transform.position.y, GameScript.player.transform.position.z);
         SaveLoadData.SaveCamAxisTemp(cameraController.X, cameraController.Y);
-
+        SaveLoadData.SetStarsScoreTemp(GameScript.starsScore);
+        if (SaveLoadData.GetScene() == 9)
+        {
+            SaveLoadData.SetStarsScoreTemp(GameScript.starsScore);
+        }
         SceneManager.LoadScene(0);
     }
     /// <summary>
@@ -126,21 +167,30 @@ public class ScriptUI : MonoBehaviour
     /// </summary>
     public void PauseButton()
     {
-        pauseCanvas.SetActive(true);
-        panelObjFader.SetActive(true);
+        if (playerConroller.grounded)
+        {
+            textVisibilityManager.HideTextObjects();
+            PlayClickSound();
+            pauseCanvas.SetActive(true);
+            panelObjFader.SetActive(true);
 
-        faderMainScript.fadingHalf = true;
-        pauseTextOn = true;
+            faderMainScript.fadingHalf = true;
+            pauseTextOn = true;
 
-        DeactivateUI();
+            DeactivateUI();
 
-        Invoke("Pause", 0.6f);
+            Invoke("Pause", 0.6f);
+
+            FaderSemiHide();
+        }
     }
     /// <summary>
     /// Кнопка начала игры(снятие паузы)
     /// </summary>
     public void StartGameButton()
     {
+        textVisibilityManager.ShowHiddenTextObjects();
+        PlayClickSound();
         faderMainScript.brighten = true;
         pauseTextOff = true;
         startButton.interactable = false;
@@ -152,11 +202,14 @@ public class ScriptUI : MonoBehaviour
     /// </summary>
     public void StartNextLevelButton()
     {
+        PlayClickSound();
         offTextAfterNextLevelButton = true;
         StopParticleLoop(particalStar1);
         StopParticleLoop(particalStar2);
         StopParticleLoop(particalStar3);
         faderMainScript.fading = true;
+        audioScript.FadeOut();
+        FaderFullHide();
 
         Invoke("ReloadScene", 0.8f);
     }
@@ -184,7 +237,10 @@ public class ScriptUI : MonoBehaviour
     {
         Time.timeScale = 1f;
         ResetAccelerometerZero();
-        levelTextScript.textOnLaunch = true;
+        if (levelTextScript != null)
+        {
+            levelTextScript.textOnLaunch = true;
+        }
 
         Invoke("OffPauseCanvas", 0.6f);
     }
@@ -202,12 +258,16 @@ public class ScriptUI : MonoBehaviour
     {
         ActivateUI();
         pauseCanvas.SetActive(false);
+        FaderFullHide();
     }
     /// <summary>
     /// Включает интерфейс пользователя - управление
     /// </summary>
-    private void ActivateUI()
+    public void ActivateUI()
     {
+        playerAddForceLocker = false;
+        accelerometerLocker = false;
+
         if (JoystickMoveObj)
         {
             joystickMoveStick.raycastTarget = true;
@@ -233,8 +293,11 @@ public class ScriptUI : MonoBehaviour
     /// <summary>
     /// Отключает интерфейс пользователя - управление
     /// </summary>
-    private void DeactivateUI()
+    public void DeactivateUI()
     {
+        playerAddForceLocker = true;
+        accelerometerLocker = true;
+
         if (JoystickMoveObj)
         {
             joystickMoveStick.raycastTarget = false;
@@ -263,13 +326,21 @@ public class ScriptUI : MonoBehaviour
     public void RestartGameButton()
     {
         Time.timeScale = 1f;
+        PlayClickSound();
         SaveLoadData.SetInProgressTemp(false);
         SaveLoadData.SetInProgress(false);
         SaveLoadData.SetFirstLevelLaunch(true);
         SaveLoadData.ResetCoordinates();
         SaveLoadData.ResetTextProgress();
         SaveLoadData.DelCamAxisTemp();
-        SaveLoadData.SetCheckpoitTextSaving(true);
+        SaveLoadData.SetContinuousTaken(false);
+        SaveLoadData.ResetStarsScore(SceneManager.GetActiveScene().buildIndex);
+        if (SaveLoadData.GetScene() == 9)
+        {
+            SaveLoadData.ResetStarsEndlessMode();
+            SaveLoadData.ResetStarsScoreTemp();
+        }
+        FaderFullHide();
         RestartLevel();
     }
     /// <summary>
@@ -278,9 +349,60 @@ public class ScriptUI : MonoBehaviour
     public void WatchAdButton()
     {
         SaveLoadData.SetContinuousTaken(true);
-        Time.timeScale = 1f;
-        //////////////////////////////////////////////////////////////////////// Запуск просмотра рекламы
-        RestartLevel();
+        PlayClickSound();
+
+        defeatCanvas.SetActive(false);
+        loadingCanvas.SetActive(true);
+        tryWatchAdCanvas.SetActive(false);
+
+        audioScript.music.Stop();
+
+        // Подписываемся на событие
+        interstitialAd.AdWatched += OnAdWatched;
+        interstitialAd.AdFail += OnAdFail;
+
+        interstitialAd.ShowAd();
+    }
+    public void AnowerTryLoadAndWatchAds()
+    {
+        interstitialAd.LoadAd();
+        WatchAdButton();
+    }
+    /// <summary>
+    /// Метод, который вызывается после фейла просмотра рекламы
+    /// </summary>
+    private void OnAdFail()
+    {
+        // Отписываемся от события, чтобы избежать утечек памяти
+        interstitialAd.AdWatched -= OnAdWatched;
+        interstitialAd.AdFail -= OnAdFail;
+
+        //Заменить экран на экран продолжения
+        loadingCanvas.SetActive(false);
+        tryWatchAdCanvas.SetActive(true);
+    }
+
+    /// <summary>
+    /// Метод, который вызывается после успешного просмотра рекламы
+    /// </summary>
+    private void OnAdWatched()
+    {
+        // Отписываемся от события, чтобы избежать утечек памяти
+        interstitialAd.AdWatched -= OnAdWatched;
+        interstitialAd.AdFail -= OnAdFail;
+
+        //Заменить экран на экран продолжения
+        loadingCanvas.SetActive(false);
+        continuousCanvas.SetActive(true);
+    }
+    /// <summary>
+    /// Кнопка продолжения игры
+    /// </summary>
+    public void Continuous()
+    {
+            Time.timeScale = 1f;
+            FaderFullHide();
+            RestartLevel();
     }
     /// <summary>
     /// Перезапуск уровня
@@ -288,6 +410,7 @@ public class ScriptUI : MonoBehaviour
     public void RestartLevel()
     {
         SaveLoadData.ResetLives();
+        saveGameScript.saving = true;
 
         faderMainScript.fading = true;
         pauseTextOff = true;
@@ -314,23 +437,39 @@ public class ScriptUI : MonoBehaviour
     public void LivesUI()
     {
         int lives = SaveLoadData.GetLives();    // Загружает количество жизней
-        switch (lives)
+        if (SaveLoadData.GetScene() == 9)
         {
-            case 0:
-                livesNumber.text = "0";
-                break;
-            case 1:
-                livesNumber.text = "1";
-                break;
-            case 2:
-                livesNumber.text = "2";
-                break;
-            case 3:
-                livesNumber.text = "3";
-                break;
-            default:
-                livesNumber.text = "E";
-                break;
+            livesNumber.text = "0";
+        }
+        else
+        {
+            switch (lives)
+            {
+                case 0:
+                    livesNumber.text = "0";
+                    break;
+                case 1:
+                    livesNumber.text = "1";
+                    break;
+                case 2:
+                    livesNumber.text = "2";
+                    break;
+                case 3:
+                    livesNumber.text = "3";
+                    break;
+                default:
+                    livesNumber.text = "0";
+                    break;
+            }
+        }
+        
+    }
+    public void StarsUI()
+    {
+        if (GameScript.starsScore != previousStarsScore)
+        {
+            starsNumber.text = GameScript.starsScore.ToString();
+            previousStarsScore = GameScript.starsScore;
         }
     }
     /// <summary>
@@ -392,15 +531,6 @@ public class ScriptUI : MonoBehaviour
 
             rectTransformButtonB.anchoredPosition3D = new Vector3(posXbuttonA, rectTransformButtonB.anchoredPosition3D.y, rectTransformButtonB.anchoredPosition3D.z);
         }
-
-        if (SaveLoadData.GetCheckpoitTextSaving())
-        {
-            gameSaved.text = "game saved...";
-        }
-        else
-        {
-            gameSaved.text = "game loaded...";
-        }
     }
     /// <summary>
     /// Загружает настройки управления
@@ -456,14 +586,20 @@ public class ScriptUI : MonoBehaviour
     /// </summary>
     private void FirstPause()
     {
-        levelLaunchCheck = SaveLoadData.GetFirstLevelLaunch();
-        if (levelLaunchCheck)
+        if (SaveLoadData.GetFirstLevelLaunch() || SaveLoadData.GetControlChange())
         {
-            levelTextScript.textOnLaunch = false;
+            checkPointTextHider = true;
+            if (levelTextScript != null)
+            {
+                levelTextScript.textOnLaunch = false;
+            }
             DeactivateUI();
             pauseCanvas.SetActive(true);
             pauseTextOn = true;
+            playerConroller.preSetProperties = true;
             SaveLoadData.SetFirstLevelLaunch(false);
+            SaveLoadData.SetControlChange(false);
+            FaderSemiHide();
             Invoke("Pause", 0.6f);
         }
     }
@@ -573,7 +709,7 @@ public class ScriptUI : MonoBehaviour
         }
     }
     /// <summary>
-    /// Уменьшает функционал на начальных уровнях
+    /// Уменьшает функционал на начальных уровнях (количество элементов в UI)
     /// </summary>
     private void Reducer()
     {
@@ -600,5 +736,52 @@ public class ScriptUI : MonoBehaviour
             default:
                 break;
         }
+    }
+    void PlayClickSound()
+    {
+        audioScript.clickSound.Play();
+    }
+    void FPSmeter()
+    {
+        timeleft -= Time.deltaTime;
+        accum += Time.timeScale / Time.deltaTime;
+        frames++;
+
+        if (timeleft <= 0.0)
+        {
+            float fpsN = accum / frames;
+
+            // Округление до ближайшего целого числа
+            int roundedFPS = Mathf.RoundToInt(fpsN);
+
+            timeleft = updateInterval;
+            accum = 0.0f;
+            frames = 0;
+
+            fps.text = "FPS: " + roundedFPS;
+        }
+    }
+
+    public void FaderFullHide()
+    {
+        // Получаем текущую позицию RectTransform
+        Vector3 currentPosition = rectTransformFaderPanel.anchoredPosition3D;
+
+        // Изменяем z-координату
+        currentPosition.z = 0;
+
+        // Применяем новую позицию RectTransform
+        rectTransformFaderPanel.anchoredPosition3D = currentPosition;
+    }
+    public void FaderSemiHide()
+    {
+        // Получаем текущую позицию RectTransform
+        Vector3 currentPosition = rectTransformFaderPanel.anchoredPosition3D;
+
+        // Изменяем z-координату
+        currentPosition.z = 20;
+
+        // Применяем новую позицию RectTransform
+        rectTransformFaderPanel.anchoredPosition3D = currentPosition;
     }
 }

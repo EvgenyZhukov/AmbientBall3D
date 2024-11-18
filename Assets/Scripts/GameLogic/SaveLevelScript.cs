@@ -2,9 +2,7 @@
 using PlayerPrefsSavingMethods;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class SaveLevelScript : MonoBehaviour
@@ -27,7 +25,7 @@ public class SaveLevelScript : MonoBehaviour
 
     void Start()
     {
-        numbersLevelObj = DefineLevelDataArrays();
+       numbersLevelObj = DefineLevelDataArrays();
 
         if (loading)
         {
@@ -40,7 +38,7 @@ public class SaveLevelScript : MonoBehaviour
     {
         if (saving)
         {
-            Invoke("Save", 0f);
+            StartCoroutine(SaveLevelAsync());
             saving = false;
         }
     }
@@ -57,7 +55,7 @@ public class SaveLevelScript : MonoBehaviour
         public Vector3[] angularVelocities;
 
         public int textProgress;
-        public bool continuousTaken;
+        public int starsScore;
         #endregion
 
     }
@@ -66,27 +64,30 @@ public class SaveLevelScript : MonoBehaviour
     /// <summary>
     /// Сохрание данных объектов уровня
     /// </summary>
-    public void Save()
+    IEnumerator SaveLevelAsync()
     {
         Transform[] levelObjList = GetLevelObgList();
         int i = 0;
         foreach (Transform child in levelObjList)
         {
             levelData.positions[i] = child.position;
-            //Debug.Log(child.position);
             levelData.rotations[i] = child.rotation;
-            //Debug.Log(child.rotation);
             levelData.activities[i] = child.gameObject.activeSelf;
-            //Debug.Log(child.gameObject.activeSelf);
-            if (child.GetComponent<Rigidbody>())
+
+            if (child.GetComponent<Rigidbody>() && !child.GetComponent<Rigidbody>().isKinematic)
             {
                 levelData.velocities[i] = child.GetComponent<Rigidbody>().velocity;
                 levelData.angularVelocities[i] = child.GetComponent<Rigidbody>().angularVelocity;
             }
+
             i++;
         }
+
         levelData.textProgress = SaveLoadData.GetTextProgress();
-        levelData.continuousTaken = SaveLoadData.GetContinuousTaken();
+        levelData.starsScore = SaveLoadData.GetStarsScore(SceneManager.GetActiveScene().buildIndex);
+
+        yield return new WaitForEndOfFrame(); // Ждем конец кадра, чтобы избежать статтеринга
+
         SaveGame.Save<LevelData>(identifier, levelData);
         Debug.Log("level_saved!");
     }
@@ -96,6 +97,7 @@ public class SaveLevelScript : MonoBehaviour
     /// </summary>
     public void Load()
     {
+        //numbersLevelObj = DefineLevelDataArrays();
         levelData = SaveGame.Load<LevelData>(
             identifier,
             new LevelData());
@@ -112,13 +114,16 @@ public class SaveLevelScript : MonoBehaviour
             //Debug.Log(child.gameObject.activeSelf);
             if (child.GetComponent<Rigidbody>())
             {
-                child.GetComponent<Rigidbody>().velocity = levelData.velocities[i];
-                child.GetComponent<Rigidbody>().angularVelocity = levelData.angularVelocities[i];
+                if (child.GetComponent<Rigidbody>().isKinematic == false)
+                {
+                    child.GetComponent<Rigidbody>().velocity = levelData.velocities[i];
+                    child.GetComponent<Rigidbody>().angularVelocity = levelData.angularVelocities[i];
+                }
             }
             i++;
         }
         SaveLoadData.SetTextProgress(levelData.textProgress);
-        SaveLoadData.SetContinuousTaken(levelData.continuousTaken);
+        SaveLoadData.SetStarsScore(SceneManager.GetActiveScene().buildIndex, levelData.starsScore);
         Debug.Log("level_loaded!");
     }
 

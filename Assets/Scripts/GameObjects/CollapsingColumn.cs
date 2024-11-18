@@ -1,36 +1,28 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class CollapsingColumn : MonoBehaviour
 {
-    public GameObject column1;
-    public GameObject column2;
-    public GameObject column3;
-    public GameObject column4;
-
-    public Rigidbody platform1;
-    public Rigidbody platform2;
-    public Rigidbody platform3;
-    public Rigidbody platform4;
+    public GameObject[] columns;
+    public Rigidbody[] platforms;
+    public AudioSource[] columnSounds;
+    public Vector3[] forcePoints;
+    private bool[] soundLockers = new bool[4];
 
     [SerializeField] private bool activated = false;
     private bool locker = false;
-    private float timer = 0f;        // Таймер
 
     int minForce = 4;
     int maxForce = 6;
 
+    public GameObject activator;
+
+    bool activatedChecked = false;
+
     void Start()
     {
-        if (platform1.GetComponent<Rigidbody>().velocity.y < -0.1)
-        {
-            activated = true; 
-            platform1.isKinematic = false;
-            platform2.isKinematic = false;
-            platform3.isKinematic = false;
-            platform4.isKinematic = false;
-        }
+        ActivateCheck();
     }
 
     /// <summary>
@@ -42,6 +34,7 @@ public class CollapsingColumn : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             activated = true;
+            activator.SetActive(false);
         }
     }
 
@@ -49,72 +42,92 @@ public class CollapsingColumn : MonoBehaviour
     {
         if (activated)
         {
-            // Запускает таймер при соприконовении с игроком
-            if (timer < 5)
-            {
-                timer += 1f * Time.deltaTime;
-            }
-            // Обрушение каскадов платформы по таймеру
-            if (timer >= 0.5)
-            {
-                platform1.isKinematic = false;
-            }
-            if (timer >= 1.5)
-            {
-                platform2.isKinematic = false;
-            }
-            if (timer >= 2.5)
-            {
-                platform3.isKinematic = false;
-            }
-            if (timer >= 3.0)
-            {
-                platform4.isKinematic = false;
-            }
+            //Запуск падения платформ
             if (!locker)
             {
-                Invoke("PushForce_1", 0.51f);
-                Invoke("PushForce_2", 1.51f);
-                Invoke("PushForce_3", 2.51f);
-                Invoke("PushForce_4", 3.01f);
+                Debug.Log("Активировалось крушение колонн!");
+                StartCoroutine(ColumnsCollapsing());
                 locker = true;
             }
-            // Отключение объекта
-            if (gameObject.activeSelf && platform4.transform.position.y < -100)
+
+            //Выключение объекта
+            if (gameObject.activeSelf && platforms[3].transform.position.y < -100)
             {
-                Invoke("SelfDestroy", 0f);
+                gameObject.SetActive(false);
             }
         }
     }
+    /// <summary>
+    /// Проверяет, активировано ли падение платформ
+    /// </summary>
+    private void ActivateCheck()
+    {
+        if (!activatedChecked && !activator.activeSelf)
+        {
+            activated = true;
 
-    /// <summary>
-    /// Метод падения колонн
-    /// </summary>
-    private void PushForce_1()
-    {
-        Vector3 forcePoint = column1.transform.position;
-        platform1.AddForceAtPosition(transform.forward * 1000 * Random.Range(minForce, maxForce), forcePoint);
+            platforms[0].isKinematic = false;
+            platforms[1].isKinematic = false;
+            platforms[2].isKinematic = false;
+            platforms[3].isKinematic = false;
+
+            activatedChecked = true;
+        }
     }
-    private void PushForce_2()
+    private IEnumerator ColumnsCollapsing()
     {
-        Vector3 forcePoint = column2.transform.position;
-        platform2.AddForceAtPosition(transform.right * 1000 * Random.Range(minForce, maxForce), forcePoint);
+        yield return new WaitForSeconds(0.5f);
+        if (!soundLockers[0])
+        {
+            platforms[0].isKinematic = false;
+            columnSounds[0].pitch = PitchRandomizer();
+            columnSounds[0].Play();
+            soundLockers[0] = true;
+        }
+        forcePoints[0] = columns[0].transform.position;
+        platforms[0].AddForceAtPosition(transform.forward * 1000 * ForceRandomizer(), forcePoints[0]);
+
+        yield return new WaitForSeconds(1f);
+        if (!soundLockers[1])
+        {
+            platforms[1].isKinematic = false;
+            columnSounds[1].pitch = PitchRandomizer();
+            columnSounds[1].Play();
+            soundLockers[1] = true;
+        }
+        forcePoints[1] = columns[1].transform.position;
+        platforms[1].AddForceAtPosition(transform.right * 1000 * ForceRandomizer(), forcePoints[1]);
+
+        yield return new WaitForSeconds(1f);
+        if (!soundLockers[2])
+        {
+            platforms[2].isKinematic = false;
+            columnSounds[2].pitch = PitchRandomizer();
+            columnSounds[2].Play();
+            soundLockers[2] = true;
+        }
+        forcePoints[2] = columns[2].transform.position;
+        platforms[2].AddForceAtPosition(transform.forward * 1000 * ForceRandomizer(), forcePoints[2]);
+        
+        yield return new WaitForSeconds(0.5f);
+        if (!soundLockers[3])
+        {
+            platforms[3].isKinematic = false;
+            columnSounds[3].pitch = PitchRandomizer();
+            columnSounds[3].Play();
+            soundLockers[3] = true;
+        }
+        forcePoints[3] = columns[3].transform.position;
+        platforms[3].AddForceAtPosition(-transform.right * 500 * ForceRandomizer(), forcePoints[3]);
     }
-    private void PushForce_3()
+    float PitchRandomizer()
     {
-        Vector3 forcePoint = column3.transform.position;
-        platform3.AddForceAtPosition(transform.forward * 1000 * Random.Range(minForce, maxForce), forcePoint);
+        float pitch = UnityEngine.Random.Range(0.98f, 1f);
+        return pitch;
     }
-    private void PushForce_4()
+    float ForceRandomizer()
     {
-        Vector3 forcePoint = column4.transform.position;
-        platform4.AddForceAtPosition(-transform.right * 500 * Random.Range(minForce, maxForce), forcePoint);
-    }
-    /// <summary>
-    /// Метод самоуничтожения
-    /// </summary>
-    private void SelfDestroy()
-    {
-        gameObject.SetActive(false);
+        float force = UnityEngine.Random.Range(minForce, maxForce);
+        return force;
     }
 }

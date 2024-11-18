@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace PlayerPrefsSavingMethods
@@ -45,7 +43,7 @@ namespace PlayerPrefsSavingMethods
         /// </summary>
         public static void ResetLives()
         {
-            PlayerPrefs.SetInt("lives", 3);
+            PlayerPrefs.SetInt("lives", 2);
         }
         /// <summary>
         /// Сохранение текущего количества жизней
@@ -123,7 +121,7 @@ namespace PlayerPrefsSavingMethods
         /// <param name="musicMuted"></param>
         /// <param name="controlJoystick">true - праворукое управление, false - леворукое управление</param>
         /// <param name="controlAccelerometer"></param>
-        public static void SetOptions(float soundVolume, float musicVolume, bool soundMuted, bool musicMuted, bool controlJoystick, bool controlAccelerometer)
+        public static void SetOptions(float soundVolume, float musicVolume, bool soundMuted, bool musicMuted, bool controlJoystick, bool controlAccelerometer, bool graphicsHigh)
         {
             PlayerPrefs.SetFloat("soundVolume", soundVolume);
             PlayerPrefs.SetFloat("musicVolume", musicVolume);
@@ -159,6 +157,14 @@ namespace PlayerPrefsSavingMethods
             {
                 PlayerPrefs.SetInt("controlAccelerometer", 0);
             }
+            if (graphicsHigh)
+            {
+                PlayerPrefs.SetInt("graphicsHigh", 1);
+            }
+            else
+            {
+                PlayerPrefs.SetInt("graphicsHigh", 0);
+            }
         }
         /// <summary>
         /// Загрузка настроек
@@ -169,7 +175,7 @@ namespace PlayerPrefsSavingMethods
         /// <param name="musicMode"></param>
         /// <param name="controlJoystick"></param>
         /// <param name="controlAccelerometer"></param>
-        public static void GetOptions(out float soundVolume, out float musicVolume, out bool soundMode, out bool musicMode, out bool controlJoystick, out bool controlAccelerometer)
+        public static void GetOptions(out float soundVolume, out float musicVolume, out bool soundMode, out bool musicMode, out bool controlJoystick, out bool controlAccelerometer, out bool graphicsHigh)
         {
             soundVolume = PlayerPrefs.GetFloat("soundVolume");
             musicVolume = PlayerPrefs.GetFloat("musicVolume");
@@ -209,6 +215,15 @@ namespace PlayerPrefsSavingMethods
             else
             {
                 controlAccelerometer = false;
+            }
+            int checkgraphicsHigh = PlayerPrefs.GetInt("graphicsHigh");
+            if (checkgraphicsHigh == 1)
+            {
+                graphicsHigh = true;
+            }
+            else
+            {
+                graphicsHigh = false;
             }
         }
         
@@ -278,27 +293,6 @@ namespace PlayerPrefsSavingMethods
             PlayerPrefs.SetInt("textProgress", 0);
         }
         /// <summary>
-        /// Запись количества звезд уровня
-        /// </summary>
-        /// <param name="scene">Номер уровня или сцены</param>
-        /// <param name="stars">Количество звезд</param>
-        public static void SetStars(int scene, int stars)
-        {
-            string level = "levelStars_" + scene;
-            PlayerPrefs.SetInt(level, stars);
-        }
-        /// <summary>
-        /// Загрузка количества звезд уровня
-        /// </summary>
-        /// <param name="scene">Номер уровня или сцены</param>
-        /// <returns>Количество звезд</returns>
-        public static int GetStars(int scene)
-        {
-            string level = "levelStars_" + scene;
-            int stars = PlayerPrefs.GetInt(level);
-            return stars;
-        }
-        /// <summary>
         /// Запись было ли продолжение игры за рекламу
         /// </summary>
         /// <param name="check"></param>
@@ -314,7 +308,7 @@ namespace PlayerPrefsSavingMethods
             }
         }
         /// <summary>
-        /// Закгрузка было ли продолжение игры за рекламу
+        /// Загрузка было ли продолжение игры за рекламу
         /// </summary>
         /// <returns></returns>
         public static bool GetContinuousTaken()
@@ -332,23 +326,7 @@ namespace PlayerPrefsSavingMethods
             return mode;
         }
 
-        /// <summary>
-        /// Сохраняет общее количество звезд
-        /// </summary>
-        /// <param name="starsTotal"></param>
-        public static void SetStarsTotal(int starsTotal)
-        {
-            PlayerPrefs.SetInt("starsTotal", starsTotal);
-        }
-        /// <summary>
-        /// Загружает общее количество звезд
-        /// </summary>
-        /// <returns></returns>
-        public static int GetStarsTotal()
-        {
-            int starsTotal = PlayerPrefs.GetInt("starsTotal");
-            return starsTotal;
-        }
+
 
         #endregion
 
@@ -482,21 +460,20 @@ namespace PlayerPrefsSavingMethods
             }
             return mode;
         }
-
-        public static void SetCheckpoitTextSaving(bool check)
+        public static void SetControlChange(bool check)
         {
             if (check)
             {
-                PlayerPrefs.SetInt("checkpoitText", 1);
+                PlayerPrefs.SetInt("controlChange", 1);
             }
             else
             {
-                PlayerPrefs.SetInt("checkpoitText", 0);
+                PlayerPrefs.SetInt("controlChange", 0);
             }
         }
-        public static bool GetCheckpoitTextSaving()
+        public static bool GetControlChange()
         {
-            int check = PlayerPrefs.GetInt("checkpoitText");
+            int check = PlayerPrefs.GetInt("controlChange");
             bool mode;
             if (check == 1)
             {
@@ -507,6 +484,184 @@ namespace PlayerPrefsSavingMethods
                 mode = false;
             }
             return mode;
+        }
+        public static void SetPropertiesFormNum(int formNum)
+        {
+            switch (formNum)
+            {
+                case 0:
+                    PlayerPrefs.SetInt("propertiesFormNum", 0);
+                    break;
+                case 1:
+                    PlayerPrefs.SetInt("propertiesFormNum", 1);
+                    break;
+                case 2:
+                    PlayerPrefs.SetInt("propertiesFormNum", 2);
+                    break;
+                case 3:
+                    PlayerPrefs.SetInt("propertiesFormNum", 3);
+                    break;
+                case 4:
+                    PlayerPrefs.SetInt("propertiesFormNum", 4);
+                    break;
+                default:
+                    break;
+            }
+        }
+        public static int GetPropertiesFormNum()
+        {
+            int num = PlayerPrefs.GetInt("propertiesFormNum");
+            return num;
+        }
+        #endregion
+
+        #region Менеджер звука
+        public static void SetMusicTime(float time)
+        {
+            PlayerPrefs.SetFloat("musicTime", time);
+        }
+        public static float GetMusicTime()
+        {
+            float time = PlayerPrefs.GetFloat("musicTime");
+            return time;
+        }
+        #endregion
+
+
+
+        #region Сохранение очков (звезд)
+        /// <summary>
+        /// Запись количества звезд уровня, фиксирование итога прохождения
+        /// </summary>
+        /// <param name="scene">Номер уровня или сцены</param>
+        /// <param name="stars">Количество звезд</param>
+        public static void SetStars(int scene, int stars)
+        {
+            string level = "levelStars_" + scene;
+            PlayerPrefs.SetInt(level, stars);
+        }
+        /// <summary>
+        /// Загрузка количества звезд уровня, фиксирование итога прохождения
+        /// </summary>
+        /// <param name="scene">Номер уровня или сцены</param>
+        /// <returns>Количество звезд</returns>
+        public static int GetStars(int scene)
+        {
+            string level = "levelStars_" + scene;
+            int stars = PlayerPrefs.GetInt(level);
+            return stars;
+        }
+
+        /// <summary>
+        /// Запись промежуточного значения количества звезд прохождения уровня
+        /// </summary>
+        /// <param name="scene"></param>
+        /// <param name="stars"></param>
+        public static void SetStarsScore(int scene, int stars)
+        {
+            string level = "levelStarsScore_" + scene;
+            PlayerPrefs.SetInt(level, stars);
+        }
+        /// <summary>
+        /// Загрузка промежуточного значения количества звезд прохождения уровня
+        /// </summary>
+        /// <param name="scene"></param>
+        /// <returns></returns>
+        public static int GetStarsScore(int scene)
+        {
+            string level = "levelStarsScore_" + scene;
+            int stars = PlayerPrefs.GetInt(level);
+            return stars;
+        }
+        /// <summary>
+        /// Сброс промежуточного значения количества звезд прохождения уровня
+        /// </summary>
+        /// <param name="scene"></param>
+        public static void ResetStarsScore(int scene)
+        {
+            string level = "levelStarsScore_" + scene;
+            PlayerPrefs.SetInt(level, 0);
+        }
+
+
+        /// <summary>
+        /// Сохраняет общее количество звезд за все уровни
+        /// </summary>
+        /// <param name="starsTotal"></param>
+        public static void SetStarsTotal(int starsTotal)
+        {
+            PlayerPrefs.SetInt("starsTotal", starsTotal);
+        }
+        /// <summary>
+        /// Загружает общее количество звезд за все уровни
+        /// </summary>
+        /// <returns></returns>
+        public static int GetStarsTotal()
+        {
+            int starsTotal = PlayerPrefs.GetInt("starsTotal");
+            return starsTotal;
+        }
+
+
+        
+        public static void SetStarsEndlessMode(int starsEndlessModeTotal)
+        {
+            PlayerPrefs.SetInt("starsEndlessMode", starsEndlessModeTotal);
+        }
+        public static int GetStarsEndlessMode()
+        {
+            int starsEndlessModeTotal = PlayerPrefs.GetInt("starsEndlessMode");
+            return starsEndlessModeTotal;
+        }
+        public static void ResetStarsEndlessMode()
+        {
+            PlayerPrefs.SetInt("starsEndlessMode", 0);
+        }
+
+        /// <summary>
+        /// Получает звезды бесконечного режима
+        /// </summary>
+        /// <param name="starsEndlessModeTotal"></param>
+        public static void SetStarsEndlessModeTotal(int starsEndlessModeTotal)
+        {
+            PlayerPrefs.SetInt("starsEndlessModeTotal", starsEndlessModeTotal);
+        }
+        /// <summary>
+        /// Записывает звезды бесконечного режима
+        /// </summary>
+        /// <returns></returns>
+        public static int GetStarsEndlessModeTotal()
+        {
+            int starsEndlessModeTotal = PlayerPrefs.GetInt("starsEndlessModeTotal");
+            return starsEndlessModeTotal;
+        }
+
+        //Переменные временного сохранения данных, для выхода в меню
+        public static void SetStarsScoreTemp(int stars)
+        {
+            PlayerPrefs.SetInt("levelStarsScoreTemp", stars);
+        }
+        public static int GetStarsScoreTemp()
+        {
+            int stars = PlayerPrefs.GetInt("levelStarsScoreTemp");
+            return stars;
+        }
+        public static void ResetStarsScoreTemp()
+        {
+            PlayerPrefs.SetInt("levelStarsScoreTemp", 0);
+        }
+        public static void SetEndlessScoreTemp(int endlessScore)
+        {
+            PlayerPrefs.SetInt("endlessScoreTemp", endlessScore);
+        }
+        public static int GetEndlessScoreTemp()
+        {
+            int endlessScore = PlayerPrefs.GetInt("endlessScoreTemp");
+            return endlessScore;
+        }
+        public static void ResetEndlessScoreTemp()
+        {
+            PlayerPrefs.SetInt("endlessScoreTemp", 0);
         }
         #endregion
     }

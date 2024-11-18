@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ButtonColumn : MonoBehaviour
 {
@@ -13,6 +11,8 @@ public class ButtonColumn : MonoBehaviour
     public Material buttonMaterialOn;
     public Material buttonMaterialOff;
     [SerializeField] private bool changed = false;
+    public AudioSource buttonSound;
+    bool soundReady = true;
 
     /// <summary>
     /// Активирует кнопку при входе в коллайдер игрока
@@ -20,15 +20,17 @@ public class ButtonColumn : MonoBehaviour
     /// <param name="other">Коллайдер игрока</param>
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && soundReady)
         {
             activator.SetActive(true);
+            buttonSound.Play();
+            soundReady = false;
         }
     }
     
     void Update()
     {
-        if (activator.activeSelf)
+        if (activator.activeSelf && !activated)
         {
             activated = true;
         }
@@ -36,12 +38,13 @@ public class ButtonColumn : MonoBehaviour
         // Процесс вдавливания кнопки
         if (activated && !pressed)
         {
-            transform.position -= new Vector3(0.0f, 0.5f * speed * Time.deltaTime, 0.0f);
-            timer += 1f * Time.deltaTime;
-        }
-        if (timer >= 1)
-        {
-            pressed = true;
+            transform.position -= new Vector3(0.0f, speed * Time.deltaTime, 0.0f);
+            timer += Time.deltaTime;
+
+            if (timer >= 1f)
+            {
+                pressed = true;
+            }
         }
 
         // Отключение свечения кнопки

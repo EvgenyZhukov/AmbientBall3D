@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FallingColumn : MonoBehaviour
 {
@@ -9,14 +7,18 @@ public class FallingColumn : MonoBehaviour
     private bool locker = false;
     int minForce = 4;
     int maxForce = 6;
+    public GameObject activator;
+
+    public AudioSource columnSound1;
+    public AudioSource columnSound2;
+    public AudioSource columnSound3;
+    bool soundLocker = false;
+
+    bool activatedChecked = false;
 
     void Start()
     {
-        if (platform.GetComponent<Rigidbody>().velocity.y < -0.1)
-        {
-            activated = true;
-            platform.isKinematic = false;
-        }
+        ActivateCheck();
     }
 
     /// <summary>
@@ -28,6 +30,8 @@ public class FallingColumn : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             activated = true;
+            activator.SetActive(false);
+            SoundStarter();
         }
     }
 
@@ -56,5 +60,41 @@ public class FallingColumn : MonoBehaviour
     private void SelfDestroy()
     {
         gameObject.SetActive(false);
+    }
+    private void SoundStarter()
+    {
+        if (!soundLocker)
+        {
+            int soundChoice = Random.Range(0, 3);
+            switch (soundChoice)
+            {
+                case 0:
+                    columnSound1.pitch = Random.Range(0.98f, 1f);
+                    columnSound1.Play();
+                    break;
+                case 1:
+                    columnSound2.pitch = Random.Range(0.98f, 1f);
+                    columnSound2.Play();
+                    break;
+                case 2:
+                    columnSound3.pitch = Random.Range(0.98f, 1f);
+                    columnSound3.Play();
+                    break;
+            }
+            soundLocker = true;
+        }
+    }
+
+    private void ActivateCheck()
+    {
+        if (!activatedChecked)
+        {
+            if (!activator.activeSelf)
+            {
+                activated = true;
+                platform.isKinematic = false;
+            }
+        }
+        activatedChecked = true;
     }
 }

@@ -1,10 +1,7 @@
 ﻿using BayatGames.SaveGameFree;
 using PlayerPrefsSavingMethods;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class SaveGameScript : MonoBehaviour
@@ -20,17 +17,12 @@ public class SaveGameScript : MonoBehaviour
         {
             LoadGameData();
         }
-
-        if (SceneManager.GetActiveScene().buildIndex != 0)
-        {
-
-        }
     }
     void Update()
     {
         if (saving)
         {
-            Invoke("SaveGameData", 0f);
+            StartCoroutine(SaveGameAsync());
             saving = false;
         }
     }
@@ -43,12 +35,15 @@ public class SaveGameScript : MonoBehaviour
         public float xPos, yPos, zPos;
         public int maxLevel;
         public bool inProgress;
-        public int[] stars = new int[20];
+        public int[] stars = new int[9];
         public int starsTotal;
+        public int starsEndlessModeTotal;
+
+        public bool continuousTaken;
     }
     #endregion
 
-    private void SaveGameData()
+    IEnumerator SaveGameAsync()
     {
         gameData.lives = SaveLoadData.GetLives();
         SaveLoadData.LoadCoordinates(out gameData.xPos, out gameData.yPos, out gameData.zPos);
@@ -56,15 +51,31 @@ public class SaveGameScript : MonoBehaviour
         gameData.inProgress = SaveLoadData.GetInProgress();
 
         int stars = 0;
+        int endlessModeStars = 0;
         int i = 0;
         foreach (int item in gameData.stars)
         {
-            gameData.stars[i] = SaveLoadData.GetStars(i);
-            stars += SaveLoadData.GetStars(i);
-            i++;
+            if (i != 9)
+            {
+                gameData.stars[i] = SaveLoadData.GetStars(i);
+                stars += SaveLoadData.GetStars(i);
+                i++;
+            }
+            else
+            {
+                //gameData.stars[i] = SaveLoadData.GetStarsEndlessMode();
+                endlessModeStars = SaveLoadData.GetStarsEndlessModeTotal();
+                i++;
+            }
         }
         SaveLoadData.SetStarsTotal(stars);
+        SaveLoadData.SetStarsEndlessModeTotal(endlessModeStars);
         gameData.starsTotal = stars;
+        gameData.starsEndlessModeTotal = endlessModeStars;
+
+        gameData.continuousTaken = SaveLoadData.GetContinuousTaken();
+
+        yield return new WaitForEndOfFrame(); // Ждем конец кадра, чтобы избежать статтеринга
 
         SaveGame.Save<GameData>(identifier, gameData);
         Debug.Log("game_saved!");
@@ -87,6 +98,8 @@ public class SaveGameScript : MonoBehaviour
             i++;
         }
         SaveLoadData.SetStarsTotal(gameData.starsTotal);
+        SaveLoadData.SetStarsEndlessModeTotal(gameData.starsEndlessModeTotal);
+        SaveLoadData.SetContinuousTaken(gameData.continuousTaken);
 
         Debug.Log("game_loaded!");
     }

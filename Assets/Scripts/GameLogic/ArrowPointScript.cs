@@ -1,16 +1,14 @@
 using PlayerPrefsSavingMethods;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ArrowPointScript : MonoBehaviour
 {
     public GameObject self;
     private bool locker = false;
-    public LevelTextScript levelTextScript;
+    private LevelTextScript levelTextScript;
     public int arrowNumber;
 
-    void Start()
+    void Awake()
     {
         levelTextScript = FindObjectOfType<LevelTextScript>();
     }

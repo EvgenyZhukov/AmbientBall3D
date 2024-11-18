@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEngine.SceneManagement;
 using System;
 using PlayerPrefsSavingMethods;
 
@@ -12,6 +9,8 @@ public class MainLvlButton : MonoBehaviour
     public TMP_Text lvlNumberText;
     public int lvlNumber;
     public MainScript MainScript;
+    public AudioScriptMain audioScriptMain;
+
     public GameObject block;
     public Material lvlNotReady;
     public Material lvlReady;
@@ -19,15 +18,18 @@ public class MainLvlButton : MonoBehaviour
     public GameObject star2;
     public GameObject star3;
     public int stars;
-    public AudioSource errorSound;
-    public AudioSource clickSound;
 
     void Start()
     {
         MainScript = FindObjectOfType<MainScript>();
+        audioScriptMain = FindObjectOfType<AudioScriptMain>();
         lvlNumber = Int32.Parse(lvlNumberText.text);
 
         lvlNumberText.color = SaveLoadData.GetLevelProgress() >= lvlNumber ? turquoise : Color.red;
+        if (lvlNumber == 1)
+        {
+            lvlNumberText.color = turquoise;
+        }
 
         block.GetComponent<MeshRenderer>().material = SaveLoadData.GetLevelProgress() > lvlNumber ? lvlReady : lvlNotReady;
 
@@ -64,13 +66,13 @@ public class MainLvlButton : MonoBehaviour
         {
             if (MainScript.currentLvl >= lvlNumber)
             {
-                clickSound.Play();
+                audioScriptMain.clickSound.Play();
                 MainScript.scene = lvlNumber;
                 MainScript.StartGame();
             }
             else
             {
-                errorSound.Play();
+                audioScriptMain.errorSound.Play();
             }
         }
     }

@@ -5,12 +5,15 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
+  - enabled: 0
+    path: Assets/Scenes/SampleScene.unity
+    guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
     path: Assets/Scenes/main.unity
     guid: ad5d874a88c76634eadacad88be49917
   - enabled: 1
     path: Assets/Scenes/lvl_01.unity
-    guid: 77abc4e49d10eb147b776af846c4e7f6
+    guid: 87c725372d7ac8445a6933e29fc3eebf
   - enabled: 1
     path: Assets/Scenes/lvl_02.unity
     guid: 473d0445dd66dde40ab63bf408d459f6
@@ -20,7 +23,27 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/lvl_04.unity
     guid: 251acc10e92f2af46a26459a28697499
+  - enabled: 1
+    path: Assets/Scenes/lvl_05.unity
+    guid: 4992ce97702aabe41b53a00cf92eeb4c
+  - enabled: 1
+    path: Assets/Scenes/lvl_06.unity
+    guid: 9c51f0758f12bd34b98cf1414bc4c38d
+  - enabled: 1
+    path: Assets/Scenes/lvl_07.unity
+    guid: e7856dadf9252a743905d8deb6382bbe
+  - enabled: 1
+    path: Assets/Scenes/lvl_08.unity
+    guid: 3e79a8ba31f2d6c4fa49872fd617336c
+  - enabled: 1
+    path: Assets/Scenes/lvl_endless.unity
+    guid: 5e13f366f1950824bb1e8140d06c584d
   m_configObjects:
-    com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 6986d95026f573541aee82a5e8de2455, type: 2}
-    com.unity.adaptiveperformance.samsung.android.provider_settings: {fileID: 11400000, guid: ecf54477217ffe6479676590a75fbd62, type: 2}
-    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: b64c7f44d0440f04bad16dbbba9e5f82, type: 2}
+    com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000,
+      guid: 5ec8ed22510e8f44e8148856e823b0e6, type: 2}
+    com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 6986d95026f573541aee82a5e8de2455,
+      type: 2}
+    com.unity.adaptiveperformance.samsung.android.provider_settings: {fileID: 11400000,
+      guid: ecf54477217ffe6479676590a75fbd62, type: 2}
+    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000,
+      guid: b64c7f44d0440f04bad16dbbba9e5f82, type: 2}

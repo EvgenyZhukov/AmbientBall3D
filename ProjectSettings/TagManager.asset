@@ -4,18 +4,21 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - Side
   - Ground
+  - Teleport
+  - DecoColumn
   - CheckPoint
   - EndLevel
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Empty
   - Water
   - UI
   - Columns
-  - 
+  - Stars
   - 
   - 
   - 

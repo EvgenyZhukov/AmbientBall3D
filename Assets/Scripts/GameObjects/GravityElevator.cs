@@ -1,12 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GravityElevator : MonoBehaviour
 {
     public GameObject gravityForce;
     public ButtonColumn button;
-    [SerializeField] private bool activated = false;
+    public bool activated = false;
 
     void Update()
     {

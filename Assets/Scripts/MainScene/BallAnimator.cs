@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -86,9 +84,9 @@ public class BallAnimator : MonoBehaviour
                 ball.transform.Rotate(new Vector3(-rotationSpeed * Time.deltaTime, 0, rotationSpeed * Time.deltaTime));
                 if (materialChanging)
                 {
-                    line1.GetComponent<MeshRenderer>().material = ballMaterialBlue;
-                    line2.GetComponent<MeshRenderer>().material = ballMaterialBlue;
-                    line3.GetComponent<MeshRenderer>().material = ballMaterialBlue;
+                    line1.GetComponent<MeshRenderer>().material = ballMaterialGreen;
+                    line2.GetComponent<MeshRenderer>().material = ballMaterialGreen;
+                    line3.GetComponent<MeshRenderer>().material = ballMaterialGreen;
                     materialChanging = false;
                 }
                 break;
@@ -102,16 +100,18 @@ public class BallAnimator : MonoBehaviour
                     materialChanging = false;
                 }
                 break;
+                /*
             case 4:
                 ball.transform.Rotate(new Vector3(rotationSpeed * Time.deltaTime, 0, -rotationSpeed * Time.deltaTime));
                 if (materialChanging)
                 {
-                    line1.GetComponent<MeshRenderer>().material = ballMaterialGreen;
-                    line2.GetComponent<MeshRenderer>().material = ballMaterialGreen;
-                    line3.GetComponent<MeshRenderer>().material = ballMaterialGreen;
+                    line1.GetComponent<MeshRenderer>().material = ballMaterialBlue;
+                    line2.GetComponent<MeshRenderer>().material = ballMaterialBlue;
+                    line3.GetComponent<MeshRenderer>().material = ballMaterialBlue;
                     materialChanging = false;
                 }
                 break;
+                */
             default:
                 changer = 1;
                 break;

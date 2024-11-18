@@ -1,19 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FastFallingColumn : MonoBehaviour
 {
     public Rigidbody platform;
     [SerializeField] private bool activated = false;
+    public GameObject activator;
+    private bool locker = false;
+
+    public AudioSource columnSound;
+    bool soundLocker = false;
+
+    bool activatedChecked = false;
 
     void Start()
     {
-        if (platform.GetComponent<Rigidbody>().velocity.y < -0.1)
-        {
-            activated = true;
-            platform.isKinematic = false;
-        }
+        ActivateCheck();
     }
 
     /// <summary>
@@ -25,7 +26,9 @@ public class FastFallingColumn : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             activated = true;
+            activator.SetActive(false);
             platform.isKinematic = false;
+            SoundStarter();
         }
     }
 
@@ -33,7 +36,12 @@ public class FastFallingColumn : MonoBehaviour
     {
         if (activated)
         {
-            if (platform.transform.position.y < -100)
+            if (!locker)
+            {
+                platform.isKinematic = false;
+                locker = true;
+            }
+            if (gameObject.activeSelf && platform.transform.position.y < -100)
             {
                 Invoke("SelfDestroy", 0f);
             }
@@ -42,5 +50,27 @@ public class FastFallingColumn : MonoBehaviour
     private void SelfDestroy()
     {
         gameObject.SetActive(false);
+    }
+    private void SoundStarter()
+    {
+        if (!soundLocker)
+        {
+            columnSound.pitch = Random.Range(0.9f, 1f);
+            columnSound.Play();
+            soundLocker = true;
+        }
+    }
+
+    private void ActivateCheck()
+    {
+        if (!activatedChecked)
+        {
+            if (!activator.activeSelf)
+            {
+                activated = true;
+                platform.isKinematic = false;
+            }
+        }
+        activatedChecked = true;
     }
 }
